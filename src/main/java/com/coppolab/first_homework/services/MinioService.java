@@ -58,12 +58,13 @@ public class MinioService {
 
     public void uploadFile(String bucketName, String objectName, String fileName) {
         try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+           /* KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             keyGenerator.init(256);
             ServerSideEncryption serverSideEncryption = ServerSideEncryption.withCustomerKey(keyGenerator.generateKey());
-
-            this.minioClient.putObject(bucketName, objectName, fileName, serverSideEncryption);
+            */
+            this.minioClient.putObject(bucketName, objectName, fileName);
             System.out.println("File upload successfully");
+
         } catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
             e.printStackTrace();
 
@@ -75,6 +76,7 @@ public class MinioService {
     public String getUrl(String bucketName,String objectName){
 
         try {
+            System.out.println("#NAPPA"+this.minioClient.presignedGetObject(bucketName,objectName));
             return this.minioClient.presignedGetObject(bucketName,objectName);
         }catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
             e.printStackTrace();

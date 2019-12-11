@@ -1,13 +1,11 @@
 package com.coppolab.first_homework.controllers;
 
+import com.coppolab.first_homework.contextClasses.HelpBucket;
 import com.coppolab.first_homework.services.MinioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping (path = "/minio")
@@ -19,9 +17,9 @@ public class MinioController {
 
 
     @PostMapping(path = "/post/{id}")
-    public String uploadFile(@PathVariable int id,@RequestBody String bucketName,@RequestBody String objectName,@RequestBody String fileName){
-        minioService.uploadFile(bucketName, objectName, fileName);
-        return minioService.getUrl(bucketName, objectName);
+    public @ResponseBody String uploadFile(@PathVariable int id, @RequestBody HelpBucket helpBucket){
+        minioService.uploadFile(helpBucket.getBucketName(),helpBucket.getObjectName(), helpBucket.getFileName());
+        return minioService.getUrl(helpBucket.getBucketName(),helpBucket.getObjectName());
     }
 
 }

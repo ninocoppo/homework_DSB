@@ -1,0 +1,13 @@
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/services/MinioService.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/services/RecordService.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/entity/User.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/controllers/RecordController.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/FirstHomeworkApplication.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/services/AdapterUserDetailsService.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/entity/Record.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/controllers/UserController.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/interfaces/RecordRepository.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/config/AdapterConfiguration.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/controllers/MinioController.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/interfaces/UserRepository.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/services/UserService.java

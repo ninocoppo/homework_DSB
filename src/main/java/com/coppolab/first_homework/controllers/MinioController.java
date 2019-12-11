@@ -1,7 +1,11 @@
 package com.coppolab.first_homework.controllers;
 
+
 import com.coppolab.first_homework.contextClasses.MinioFile;
 import com.coppolab.first_homework.entity.User;
+
+
+
 import com.coppolab.first_homework.services.MinioService;
 
 import io.minio.messages.Item;
@@ -9,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
+
 
 @Controller
 @RequestMapping (path = "/minio")
@@ -17,6 +23,7 @@ public class MinioController {
 
     @Autowired
     MinioService minioService;
+
 
 
 
@@ -35,6 +42,8 @@ public class MinioController {
     public @ResponseBody
     List<String> getFileInfo(@PathVariable String nickname, @PathVariable String objectName){
         return minioService.getFileInfo(nickname,objectName);
+
+   
     }
 
 }

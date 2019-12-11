@@ -2,19 +2,25 @@ package com.coppolab.first_homework.services;
 
 import com.coppolab.first_homework.entity.User;
 import io.minio.MinioClient;
+import io.minio.ServerSideEncryption;
 import io.minio.errors.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xmlpull.v1.XmlPullParserException;
 
+import javax.crypto.KeyGenerator;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class MinioService {
 
-    private String acceskey = "FIG19SZE1SKE59BJ0A63";
-    private String secretkey = "OY3enw94yeTK7sppVT+iIEydkS0E9+buJf00PtU1";
+
+    private String acceskey = "J53UUAWAO16J2S5F9XY7";
+    private String secretkey = "eiM19zTwP9TqEnXiCvs0im4dYyiaq1hhHEreVEyp";
 
     private static MinioClient minioClient;
 
@@ -48,5 +54,31 @@ public class MinioService {
             e.printStackTrace();
         }
         System.out.println("Bucket for user: " + user.getNickname() + " created");
+    }
+
+    public void uploadFile(String bucketName, String objectName, String fileName) {
+        try {
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(256);
+            ServerSideEncryption serverSideEncryption = ServerSideEncryption.withCustomerKey(keyGenerator.generateKey());
+
+            this.minioClient.putObject(bucketName, objectName, fileName, serverSideEncryption);
+            System.out.println("File upload successfully");
+        } catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
+            e.printStackTrace();
+
+        }
+
+
+    }
+
+    public String getUrl(String bucketName,String objectName){
+
+        try {
+            return this.minioClient.presignedGetObject(bucketName,objectName);
+        }catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

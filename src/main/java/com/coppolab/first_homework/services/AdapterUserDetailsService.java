@@ -1,4 +1,4 @@
-/*package com.coppolab.first_homework.services;
+package com.coppolab.first_homework.services;
 
 import com.coppolab.first_homework.entity.User;
 import com.coppolab.first_homework.interfaces.UserRepository;
@@ -56,4 +56,4 @@ public class AdapterUserDetailsService implements UserDetailsService {
         return authorities;
     }
 
-}*/
+}

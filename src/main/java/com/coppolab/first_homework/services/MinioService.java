@@ -5,6 +5,8 @@ import io.minio.MinioClient;
 import io.minio.Result;
 import io.minio.errors.*;
 import io.minio.messages.Item;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -12,7 +14,9 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MinioService {
@@ -57,16 +61,16 @@ public class MinioService {
         System.out.println("Bucket for user: " + user.getNickname() + " created");
     }
 
-    public void uploadFile(String bucketName, String objectName, String fileName) {
+    public ResponseEntity uploadFile(String bucketName, String objectName, String fileName) {
         try {
 
             this.minioClient.putObject(bucketName, objectName, fileName);
             System.out.println("File upload successfully");
+            return new ResponseEntity(HttpStatus.OK);
         } catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
             e.printStackTrace();
-
         }
-
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -80,18 +84,27 @@ public class MinioService {
         return null;
     }
 
-    public List<String> getFileInfo(String nickname, String objectName){
-        List<String> info = new ArrayList<>();
-        info.add("BucketName: "+nickname);
+    public Map<String,String> getFileInfo(String nickname, String objectName){
+        Map<String,String> info = new HashMap<>();
+        info.put("Bucket Name",nickname);
         try {
+            /*Un utente può creare più file quindi il solo bucket name == nickname
+            * non basta per identificare il file cercato. Devo fare il for e quindi poi
+            * fare l'equals con il nome del file all'interno del bucket. Devo passare
+            * per forza l'objectName quindi come parametro*/
             Iterable<Result<Item>> fileList =  minioClient.listObjects(nickname);
             for(Result<Item> myFile: fileList){
 
-                if(myFile.get().objectName().equals(objectName)){
-                    System.out.println("FILE NOME: "+myFile.get().objectName());
-                    info.add("ObjectName: "+myFile.get().objectName());
+                if(myFile.get().objectName().equals(objectName)) {
+
+                    info.put("Object Name",myFile.get().objectName());
+
+                    System.err.println("Bucket name: "+info.get((Object)"Bucket Name"));
+                    System.err.println("Object name: "+info.get((Object)"Object Name"));
+
                     return info;
                 }
+
             }
         } catch (XmlPullParserException e) {
             e.printStackTrace();

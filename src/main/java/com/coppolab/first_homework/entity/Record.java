@@ -19,11 +19,6 @@ public class Record {
     @ManyToOne
     private User author;
 
-    @Transient
-    private int authorId;
-
-
-
     public int getRecordId() {
         return recordId;
     }
@@ -32,13 +27,6 @@ public class Record {
         this.recordId = recordId;
     }
 
-    public int getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
-    }
 
     public String getFilename() {
         return filename;
@@ -54,5 +42,21 @@ public class Record {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public String getBucketName() {
+        return bucketName;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
     }
 }

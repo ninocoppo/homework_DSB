@@ -6,10 +6,12 @@ import com.coppolab.first_homework.services.MinioService;
 
 import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping (path = "/minio")
@@ -21,8 +23,9 @@ public class MinioController {
 
 
     @PostMapping(path = "/upload")
-    public void uploadFile(@RequestBody MinioFile minioFile){
-        minioService.uploadFile(minioFile.getBucketName(), minioFile.getObjectName(), minioFile.getFilename());
+    public ResponseEntity uploadFile(@RequestBody MinioFile minioFile){
+
+        return minioService.uploadFile(minioFile.getBucketName(), minioFile.getObjectName(), minioFile.getFilename());
 
     }
 
@@ -33,7 +36,7 @@ public class MinioController {
 
     @GetMapping(path = "/fileName/{nickname},{objectName}")
     public @ResponseBody
-    List<String> getFileInfo(@PathVariable String nickname, @PathVariable String objectName){
+    Map<String, String> getFileInfo(@PathVariable String nickname, @PathVariable String objectName){
         return minioService.getFileInfo(nickname,objectName);
     }
 

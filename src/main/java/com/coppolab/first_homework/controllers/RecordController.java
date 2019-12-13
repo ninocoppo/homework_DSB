@@ -1,5 +1,6 @@
 package com.coppolab.first_homework.controllers;
 
+import com.coppolab.first_homework.contextClasses.RecordRequest;
 import com.coppolab.first_homework.entity.Record;
 import com.coppolab.first_homework.entity.User;
 import com.coppolab.first_homework.interfaces.UserRepository;
@@ -20,9 +21,9 @@ public class RecordController {
     RecordService recordService;
 
 
-    @PostMapping(path = "/put")
-    public @ResponseBody Record addFileRecord(@RequestBody Record record){
-        return recordService.saveRecord(record);
+    @PostMapping(path = "/put" )
+    public @ResponseBody ResponseEntity<Record> addFileRecord(@RequestBody RecordRequest recordRequest){
+        return recordService.saveRecord(recordRequest);
 
     }
 
@@ -32,4 +33,15 @@ public class RecordController {
         return recordService.getUser(id);
     }
 
+    @GetMapping(path = "/check/{id}")
+    public ResponseEntity checkRecord(@PathVariable int id){
+       return recordService.checkRecord(id);
+    }
+
+    @PostMapping(path="/update/{id},{objectName}")
+    public @ResponseBody ResponseEntity<Record> updateRecord(@PathVariable int id,@PathVariable String objectName){
+        return recordService.updateRecord(id,objectName);
+    }
+
 }
+

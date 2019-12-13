@@ -1,4 +1,4 @@
-/*package com.coppolab.first_homework.config;
+package com.coppolab.first_homework.config;
 
 import com.coppolab.first_homework.services.AdapterUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,9 @@ public class AdapterConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user/register").permitAll()
-                .antMatchers(HttpMethod.POST,"/record/post").hasAuthority("USER,ADMIN")
+                /*Record Controller*/
+                .antMatchers(HttpMethod.POST,"/record/put").hasAnyAuthority("USER,ADMIN")
                 .anyRequest().authenticated()
                 .and().csrf().disable();
     }
 }
-*/

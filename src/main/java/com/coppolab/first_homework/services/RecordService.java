@@ -1,20 +1,16 @@
 package com.coppolab.first_homework.services;
 
+import com.coppolab.first_homework.contextClasses.RecordRequest;
 import com.coppolab.first_homework.entity.Record;
 import com.coppolab.first_homework.entity.User;
 import com.coppolab.first_homework.interfaces.RecordRepository;
 import com.coppolab.first_homework.interfaces.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class RecordService {
@@ -25,15 +21,40 @@ public class RecordService {
     @Autowired
     UserRepository userRepository;
 
-    public Record saveRecord(Record record){
+    @Autowired
+    SecurityService securityService;
 
-        Optional<User> u = userRepository.findById(record.getAuthorId());
-        User user = u.get();
+    @Autowired
+    MinioService storageService;
 
-        record.setAuthor(user);
-        System.out.println("Record: "+record);
+    public ResponseEntity<Record> saveRecord(RecordRequest recordRequest){
 
-        return recordRepository.save(record);
+        //Get current authenticated user
+        String nickname = securityService.getAuthenticatedUser();
+        try {
+            if (nickname.equals(recordRequest.getNickname())) {
+                Optional<User> u = userRepository.findByNickname(nickname);
+                User user = u.get();
+                Record record = new Record();
+
+
+                record.setAuthor(user);
+                record.setFilename(recordRequest.getFilename());
+
+                record.setAuthor(user);
+                System.out.println("Record: " + record);
+
+                return new ResponseEntity<Record>(recordRepository.save(record),HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<Record>(HttpStatus.UNAUTHORIZED);
+            }
+            }catch(NoSuchElementException e){
+                e.printStackTrace();
+        }
+
+        return new ResponseEntity<Record>(HttpStatus.NOT_FOUND);
+
     }
 
     public ResponseEntity<User> getUser(int id){
@@ -48,4 +69,35 @@ public class RecordService {
             return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    public ResponseEntity checkRecord(int id){
+
+        /*Sto supponendo che l'id passato dal client sia l'id del record*/
+        Optional<Record> r = recordRepository.findById(id);
+        Record record = r.get();
+        User user = record.getAuthor();
+        String nickname = user.getNickname();
+        /*If the record is associated to the authenticated user*/
+        if(nickname.equals(securityService.getAuthenticatedUser())){
+            return new ResponseEntity(HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+    }
+
+    public ResponseEntity<Record> updateRecord(int id, String objectName) {
+        /*Sto supponendo che l'id passato dal client sia l'id del record*/
+        Optional<Record> r = recordRepository.findById(id);
+        Record record = r.get();
+        Map<String,String> fileInfo;
+
+        fileInfo = storageService.getFileInfo(record.getAuthor().getNickname(),objectName);
+        record.setBucketName(fileInfo.get((String)"Bucket Name"));
+        record.setObjectName(fileInfo.get((String)"Object Name"));
+        recordRepository.save(record);
+        return new ResponseEntity<>(record,HttpStatus.ACCEPTED);
+    }
+
+
+
+
 }

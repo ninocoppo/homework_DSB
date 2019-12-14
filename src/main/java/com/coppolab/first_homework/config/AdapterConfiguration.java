@@ -32,6 +32,9 @@ public class AdapterConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/register").permitAll()
                 /*Record Controller*/
                 .antMatchers(HttpMethod.POST,"/record/put").hasAnyAuthority("USER,ADMIN")
+
+                //Momentaneo
+                .antMatchers(HttpMethod.POST,"/minio/upload").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable();
     }

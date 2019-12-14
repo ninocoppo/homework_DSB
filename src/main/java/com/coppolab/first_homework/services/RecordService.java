@@ -24,6 +24,8 @@ public class RecordService {
     @Autowired
     SecurityService securityService;
 
+
+
     @Autowired
     MinioService storageService;
 
@@ -35,6 +37,7 @@ public class RecordService {
             if (nickname.equals(recordRequest.getNickname())) {
                 Optional<User> u = userRepository.findByNickname(nickname);
                 User user = u.get();
+
                 Record record = new Record();
 
 
@@ -95,6 +98,25 @@ public class RecordService {
         record.setObjectName(fileInfo.get((String)"Object Name"));
         recordRepository.save(record);
         return new ResponseEntity<>(record,HttpStatus.ACCEPTED);
+    }
+
+    public ResponseEntity<String> getRecord(int id){
+
+        Optional<Record> r = recordRepository.findById(id);
+
+        Record record = r.get();
+
+        String url = "";
+
+        User user = securityService.getAuthenticatedUserObject();
+
+        //check if the user is the owner of the record
+        if(record.getAuthor().getId()==user.getId()){
+            System.out.println("Lo user è il proprietario!!!!");
+            url=storageService.getUrl(record.getBucketName(),record.getObjectName());
+            return new ResponseEntity<>(url,HttpStatus.MOVED_PERMANENTLY);
+        }
+        return new ResponseEntity<>("NOT FOUND",HttpStatus.NOT_FOUND);
     }
 
 

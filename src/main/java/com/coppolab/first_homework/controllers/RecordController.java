@@ -43,5 +43,10 @@ public class RecordController {
         return recordService.updateRecord(id,objectName);
     }
 
+    @GetMapping(path="/showRecord/{id}")
+    public @ResponseBody ResponseEntity<String> showRecord(@PathVariable int id){
+        return recordService.getRecord(id);
+    }
+
 }
 

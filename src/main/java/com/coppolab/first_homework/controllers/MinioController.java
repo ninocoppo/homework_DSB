@@ -4,6 +4,7 @@ import com.coppolab.first_homework.contextClasses.MinioFile;
 import com.coppolab.first_homework.entity.User;
 import com.coppolab.first_homework.services.MinioService;
 
+import io.minio.Result;
 import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +40,23 @@ public class MinioController {
     Map<String, String> getFileInfo(@PathVariable String nickname, @PathVariable String objectName){
         return minioService.getFileInfo(nickname,objectName);
     }
+
+    /*Return all files owned by a user*/
+    @GetMapping(path = "/userFiles/{nickname}")
+    public @ResponseBody String getFiles(@PathVariable String nickname){
+        return minioService.getFiles(nickname);
+    }
+
+    /*Return all files stored in the storage*/
+    @GetMapping(path= "/allFiles")
+    public @ResponseBody String getAllFiles(){
+        return minioService.getAllFiles();
+    }
+
+    @GetMapping (path ="files")
+    public @ResponseBody String getFilesByUserRole(){
+        return minioService.getFilesByUserRole();
+    }
+
 
 }

@@ -1,10 +1,14 @@
 package com.coppolab.first_homework.services;
 
 import com.coppolab.first_homework.entity.User;
+import com.coppolab.first_homework.interfaces.UserRepository;
+import com.google.gson.Gson;
 import io.minio.MinioClient;
 import io.minio.Result;
 import io.minio.errors.*;
+import io.minio.messages.Bucket;
 import io.minio.messages.Item;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,10 +17,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MinioService {
@@ -27,6 +28,10 @@ public class MinioService {
     private String secretkey = "igf4sYXAGpUmZp9JKteCoBFQFQMh2Dyu7hM+VOZO";
 
     private static MinioClient minioClient;
+    @Autowired
+    private SecurityService securityService;
+    @Autowired
+    UserRepository userRepository;
 
 
     public MinioService() throws InvalidPortException, InvalidEndpointException {
@@ -126,5 +131,83 @@ public class MinioService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String getFiles(String nickname){
+
+        List<String> files = new ArrayList<>();
+
+        try {
+            Iterable<Result<Item>> infos =  minioClient.listObjects(nickname);
+            //Fill user's file list
+            for(Result<Item> i: infos){
+                files.add(i.get().objectName());
+            }
+
+            return new Gson().toJson(files);
+
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (InvalidBucketNameException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InsufficientDataException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (ErrorResponseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoResponseException e) {
+            e.printStackTrace();
+        } catch (InternalException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getAllFiles(){
+        try {
+            List<Bucket> buckets = minioClient.listBuckets();
+            List<String> files = new ArrayList<>();
+            for(Bucket b: buckets){
+                files.add(this.getFiles(b.name()));
+            }
+            return new Gson().toJson(files);
+
+        } catch (InvalidBucketNameException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InsufficientDataException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoResponseException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (ErrorResponseException e) {
+            e.printStackTrace();
+        } catch (InternalException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getFilesByUserRole(){
+        String nickname = securityService.getAuthenticatedUser();
+        Optional<User> u = userRepository.findByNickname(nickname);
+        User user = u.get();
+        if(user.getRoles().contains((String)"ADMIN")){
+           return this.getAllFiles();
+        }
+        else{
+            return this.getFiles(nickname);
+        }
     }
 }

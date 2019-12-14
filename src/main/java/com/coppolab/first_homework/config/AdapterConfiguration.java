@@ -29,12 +29,15 @@ public class AdapterConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                /*User Controller*/
                 .antMatchers("/user/register").permitAll()
                 /*Record Controller*/
                 .antMatchers(HttpMethod.POST,"/record/put").hasAnyAuthority("USER,ADMIN")
-
-                //Momentaneo
+                .antMatchers(HttpMethod.GET,"record/showRecord/{id}").hasAnyAuthority("USER,ADMIN")
+                /*Minio Controller*/
+                .antMatchers(HttpMethod.GET,"minio/files").hasAnyAuthority("USER,ADMIN")
                 .antMatchers(HttpMethod.POST,"/minio/upload").permitAll()
+
                 .anyRequest().authenticated()
                 .and().csrf().disable();
     }

@@ -53,6 +53,7 @@ public class MinioController {
         return minioService.getAllFiles();
     }
 
+    /*If user role == ADMIN return all files in the storage else return auth user's files*/
     @GetMapping (path ="files")
     public @ResponseBody String getFilesByUserRole(){
         return minioService.getFilesByUserRole();

@@ -1,0 +1,16 @@
+com/coppolab/first_homework/interfaces/UserRepository.class
+com/coppolab/first_homework/controllers/UserController.class
+com/coppolab/first_homework/FirstHomeworkApplication.class
+com/coppolab/first_homework/contextClasses/RecordRequest.class
+com/coppolab/first_homework/controllers/MinioController.class
+com/coppolab/first_homework/services/SecurityService.class
+com/coppolab/first_homework/services/RecordService.class
+com/coppolab/first_homework/services/MinioService.class
+com/coppolab/first_homework/entity/User.class
+com/coppolab/first_homework/entity/Record.class
+com/coppolab/first_homework/controllers/RecordController.class
+com/coppolab/first_homework/config/AdapterConfiguration.class
+com/coppolab/first_homework/contextClasses/MinioFile.class
+com/coppolab/first_homework/services/AdapterUserDetailsService.class
+com/coppolab/first_homework/services/UserService.class
+com/coppolab/first_homework/interfaces/RecordRepository.class

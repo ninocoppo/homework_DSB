@@ -39,7 +39,8 @@ public class AdapterConfiguration extends WebSecurityConfigurerAdapter {
                 /*Minio Controller*/
                 .antMatchers(HttpMethod.GET,"/minio/files").hasAnyAuthority("USER,ADMIN")
                 .antMatchers(HttpMethod.POST,"/minio/upload").permitAll()
-
+                .antMatchers(HttpMethod.DELETE,"/minio/deleteAsAdmin").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE,"/minio/deleteAsUser").hasAnyAuthority("ADMIN","USER")
                 .anyRequest().authenticated()
                 .and().csrf().disable();
     }

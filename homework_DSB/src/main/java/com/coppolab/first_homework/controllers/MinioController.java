@@ -69,4 +69,19 @@ public class MinioController {
     }
 
 
+    //DELETE IN ADMIN MODE
+
+    @DeleteMapping(path = "/deleteAsAdmin/{id}")
+    public @ResponseBody ResponseEntity<String> deleteAsAdmin(@PathVariable int id){
+        return minioService.deleteAsAdmin(id);
+    }
+
+    //DELETE IN USER MODE
+
+    @DeleteMapping(path="/deleteAsUser/{id}")
+    public @ResponseBody ResponseEntity<String> deleteAsUser(@PathVariable int id){
+        return minioService.deleteAsUser(id);
+    }
+
+
 }

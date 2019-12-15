@@ -1,6 +1,8 @@
 package com.coppolab.first_homework.services;
 
+import com.coppolab.first_homework.entity.Record;
 import com.coppolab.first_homework.entity.User;
+import com.coppolab.first_homework.interfaces.RecordRepository;
 import com.coppolab.first_homework.interfaces.UserRepository;
 import com.google.gson.Gson;
 import io.minio.MinioClient;
@@ -24,14 +26,16 @@ public class MinioService {
 
 
 
-    private String acceskey = "PB0WPRHCESQ602Y66QFG";
-    private String secretkey = "igf4sYXAGpUmZp9JKteCoBFQFQMh2Dyu7hM+VOZO";
+    private String acceskey = "J53UUAWAO16J2S5F9XY7";
+    private String secretkey = "eiM19zTwP9TqEnXiCvs0im4dYyiaq1hhHEreVEyp";
 
     private static MinioClient minioClient;
     @Autowired
     private SecurityService securityService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    RecordRepository recordRepository;
 
 
     public MinioService() throws InvalidPortException, InvalidEndpointException {
@@ -210,4 +214,81 @@ public class MinioService {
             return this.getFiles(nickname);
         }
     }
+
+    //DELETE IN USER MODE
+
+    public ResponseEntity<String> deleteAsAdmin(int id){
+        Optional<Record> r = recordRepository.findById(id);
+        Record record = r.get();
+        String bucketName = record.getBucketName();
+        String objectName = record.getObjectName();
+
+        try {
+            minioClient.removeObject(bucketName,objectName);
+            recordRepository.deleteById(id);
+            return new ResponseEntity<>("OK",HttpStatus.OK);
+        } catch (InvalidBucketNameException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InsufficientDataException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoResponseException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (ErrorResponseException e) {
+            e.printStackTrace();
+        } catch (InternalException e) {
+            e.printStackTrace();
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
+        //DA CAMBIARE
+        return new ResponseEntity<>("NOT OK",HttpStatus.NOT_FOUND);
+    }
+
+    public ResponseEntity<String> deleteAsUser(int id){
+        Optional<Record> r = recordRepository.findById(id);
+        Record record = r.get();
+        String bucketName = record.getBucketName();
+        String objectName = record.getObjectName();
+        User user = securityService.getAuthenticatedUserObject();
+        if(record.getAuthor().getId()==user.getId()) {
+            try {
+                minioClient.removeObject(bucketName, objectName);
+                recordRepository.deleteById(id);
+                return new ResponseEntity<>("OK", HttpStatus.OK);
+            } catch (InvalidBucketNameException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InsufficientDataException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (NoResponseException e) {
+                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (ErrorResponseException e) {
+                e.printStackTrace();
+            } catch (InternalException e) {
+                e.printStackTrace();
+            } catch (InvalidArgumentException e) {
+                e.printStackTrace();
+            }
+        }else{
+            return new ResponseEntity<>("USER NON PROPRIETARIO",HttpStatus.UNAUTHORIZED);
+        }
+        //DA CAMBIARE
+        return new ResponseEntity<>("NOT OK",HttpStatus.NOT_FOUND);
+    }
+
 }

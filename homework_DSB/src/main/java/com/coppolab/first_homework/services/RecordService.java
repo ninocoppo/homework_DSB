@@ -73,7 +73,7 @@ public class RecordService {
         }
     }
 
-    public ResponseEntity checkRecord(int id){
+    public ResponseEntity<Record> checkRecord(int id){
 
         /*Sto supponendo che l'id passato dal client sia l'id del record*/
         Optional<Record> r = recordRepository.findById(id);
@@ -82,7 +82,9 @@ public class RecordService {
         String nickname = user.getNickname();
         /*If the record is associated to the authenticated user*/
         if(nickname.equals(securityService.getAuthenticatedUser())){
-            return new ResponseEntity(HttpStatus.ACCEPTED);
+            storageService.uploadFile(nickname,record.getFilename(),record.getFilename());
+            this.updateRecord(id,record.getFilename());
+            return new ResponseEntity(record,HttpStatus.ACCEPTED);
         }
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }

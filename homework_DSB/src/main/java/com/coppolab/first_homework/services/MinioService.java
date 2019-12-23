@@ -1,5 +1,6 @@
 package com.coppolab.first_homework.services;
 
+import com.coppolab.first_homework.config.MinioConfig;
 import com.coppolab.first_homework.entity.Record;
 import com.coppolab.first_homework.entity.User;
 import com.coppolab.first_homework.interfaces.RecordRepository;
@@ -25,9 +26,17 @@ import java.util.*;
 public class MinioService {
 
 
+    MinioConfig minioConfig;
 
-    private String acceskey = "J53UUAWAO16J2S5F9XY7";
-    private String secretkey = "eiM19zTwP9TqEnXiCvs0im4dYyiaq1hhHEreVEyp";
+
+    private String accesskey;
+
+    private String secretkey;
+
+    private String url;
+
+
+
 
     private static MinioClient minioClient;
     @Autowired
@@ -37,9 +46,17 @@ public class MinioService {
     @Autowired
     RecordRepository recordRepository;
 
-
     public MinioService() throws InvalidPortException, InvalidEndpointException {
-        this.minioClient = new MinioClient("http://127.0.0.1:9000", acceskey, secretkey);
+
+        this.minioConfig = new MinioConfig();
+        this.secretkey = this.minioConfig.getSecret_key();
+        this.accesskey = this.minioConfig.getAccess_key();
+        this.url = this.minioConfig.getUrl();
+        System.out.println(this.minioConfig.getAccess_key());
+        System.out.println(this.secretkey);
+        System.out.println(this.url);
+
+        this.minioClient = new MinioClient(url, accesskey, secretkey);
         System.out.println("Minio Client Running");
     }
 
@@ -72,8 +89,8 @@ public class MinioService {
 
     public ResponseEntity uploadFile(String bucketName, String objectName, String fileName) {
         try {
-
-            this.minioClient.putObject(bucketName, objectName, fileName);
+            //filename = path of the container storage + filename
+            this.minioClient.putObject(bucketName, objectName, "/data/"+fileName);
             System.out.println("File upload successfully");
             return new ResponseEntity(HttpStatus.OK);
         } catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
@@ -215,7 +232,7 @@ public class MinioService {
         }
     }
 
-    //DELETE IN USER MODE
+    //DELETE IN ADMIN MODE
 
     public ResponseEntity<String> deleteAsAdmin(int id){
         Optional<Record> r = recordRepository.findById(id);
@@ -252,6 +269,7 @@ public class MinioService {
         return new ResponseEntity<>("NOT OK",HttpStatus.NOT_FOUND);
     }
 
+    //DELETE IN USER MODE
     public ResponseEntity<String> deleteAsUser(int id){
         Optional<Record> r = recordRepository.findById(id);
         Record record = r.get();
@@ -291,4 +309,13 @@ public class MinioService {
         return new ResponseEntity<>("NOT OK",HttpStatus.NOT_FOUND);
     }
 
+    public ResponseEntity<String> deleteByUserRole(int id){
+        User user = securityService.getAuthenticatedUserObject();
+        if(user.getRoles().contains("USER")){
+           return this.deleteAsUser(id);
+        }else if(user.getRoles().contains("ADMIN")){
+            return this.deleteAsAdmin(id);
+        }
+        return new ResponseEntity<>("BAD",HttpStatus.NOT_FOUND);
+    }
 }

@@ -11,6 +11,8 @@
 /home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/services/SecurityService.java
 /home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/config/AdapterConfiguration.java
 /home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/controllers/MinioController.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/config/MinioConfig.java
 /home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/contextClasses/RecordRequest.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/controllers/TestGateway.java
 /home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/interfaces/UserRepository.java
 /home/mauro/Università/Sistemi Distribuiti/Homework/homework_DSB/src/main/java/com/coppolab/first_homework/services/UserService.java

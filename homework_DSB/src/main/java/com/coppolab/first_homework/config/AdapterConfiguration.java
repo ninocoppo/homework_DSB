@@ -7,7 +7,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
@@ -35,12 +34,11 @@ public class AdapterConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/record/put").hasAnyAuthority("USER,ADMIN")
                 .antMatchers(HttpMethod.GET,"/record/showRecord/{id}").hasAnyAuthority("USER,ADMIN")
                 .antMatchers(HttpMethod.POST,"record/update/{id},{objectName}").hasAnyAuthority("USER,ADMIN")
-                .antMatchers(HttpMethod.GET,"/record/testGateway").permitAll()
+                .antMatchers(HttpMethod.GET,"/test/testGateway").permitAll()
                 /*Minio Controller*/
                 .antMatchers(HttpMethod.GET,"/minio/files").hasAnyAuthority("USER,ADMIN")
                 .antMatchers(HttpMethod.POST,"/minio/upload").permitAll()
-                .antMatchers(HttpMethod.DELETE,"/minio/deleteAsAdmin").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE,"/minio/deleteAsUser").hasAnyAuthority("ADMIN","USER")
+                .antMatchers(HttpMethod.DELETE,"/minio/deleteByUserRole/{id}").hasAnyAuthority("ADMIN","USER")
                 .anyRequest().authenticated()
                 .and().csrf().disable();
     }

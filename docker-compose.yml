@@ -1,0 +1,79 @@
+version: '3'
+services:  
+    application:
+        container_name: myapp
+        image: myapp
+        build:
+            context: ./homework_DSB
+            dockerfile: Dockerfile
+        depends_on:
+            - db
+            - minio
+        links:
+            - db
+            - minio
+        environment:
+          - DB_URL=jdbc:mysql://dockermysql:3306/homework_db
+          - DB_USERNAME=mauro
+          - DB_PASSWORD=mauro
+          - ACCESS_KEY=mauro
+          - SECRET_KEY=maurolabruna
+          - MINIO_URL=http://dockerminio:9000
+          #Change Tomcat default port. Passed it as env variable
+          #because Docker dont't change it
+          - PORT=8081
+        ports:
+            - "8081:8081"
+        expose:
+            - "8081"
+        volumes:
+            - ./homework_DSB:/data/
+        restart: on-failure:2
+    db:
+        container_name: dockermysql
+        image: mysql
+        environment:
+            - MYSQL_ROOT_USER=root
+            - MYSQL_ROOT_PASSWORD=secret
+            - MYSQL_DATABASE=homework_db
+            - MYSQL_USER=mauro
+            - MYSQL_PASSWORD=mauro
+        ports:
+            - "3307:3306"
+        volumes:
+            - ./storage:/db/storage
+    minio:
+        container_name: dockerminio
+        image: minio/minio
+        environment:
+            - MINIO_ACCESS_KEY=mauro
+            - MINIO_SECRET_KEY=maurolabruna
+        ports:
+            - "9000:9000"
+        expose:
+            - "9000"
+        command: minio server ./storage
+
+        volumes:
+            - ./storage:/minio/storage
+    api_gateway:
+        container_name: api_gateway
+        environment:
+            - URL=http://myapp:8081
+            - PORT=8080
+        image: api_gateway
+        build:
+            context: ./api_gateway
+            dockerfile: Dockerfile
+        ports:
+            - "8080:8080"
+        expose:
+            - "8080"
+        links:
+            - application
+        depends_on:
+            - application
+        volumes:
+            - ./storage:/api_gateway/storage
+
+    

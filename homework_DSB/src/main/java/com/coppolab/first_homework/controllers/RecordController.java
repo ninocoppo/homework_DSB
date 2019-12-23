@@ -34,7 +34,7 @@ public class RecordController {
         return recordService.getUser(id);
     }
 
-    @GetMapping(path = "/check/{id}")
+    @PostMapping(path = "/check/{id}")
     public ResponseEntity checkRecord(@PathVariable int id){
        return recordService.checkRecord(id);
     }

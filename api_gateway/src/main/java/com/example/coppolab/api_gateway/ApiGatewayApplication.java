@@ -1,7 +1,9 @@
 package com.example.coppolab.api_gateway;
 
-import com.example.coppolab.api_gateway.configuration.UriConfiguration;
 
+import com.example.coppolab.api_gateway.configuration.UriConfiguration;
+import com.example.coppolab.api_gateway.filter.HttpRequestInfo;
+import com.example.coppolab.api_gateway.filter.PayloadFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -14,59 +16,76 @@ import org.springframework.http.HttpMethod;
 @EnableConfigurationProperties(UriConfiguration.class)
 public class ApiGatewayApplication {
 
+
+
     public static void main(String[] args) {
         SpringApplication.run(ApiGatewayApplication.class, args);
 
         UriConfiguration uriConfiguration = new UriConfiguration();
 
-        System.out.println("URL: "+uriConfiguration.getUrl());
+        //PrometheusMeterRegistry registry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+
+        System.out.println("URL: "+ uriConfiguration.getUrl());
     }
-
-
-
 
     @Bean
+    public RouteLocator myRoutes(RouteLocatorBuilder builder, UriConfiguration uriConfiguration, HttpRequestInfo httpRequestInfo, PayloadFilter payloadFilter) {
 
-    public RouteLocator myRoutes(RouteLocatorBuilder builder, UriConfiguration uriConfiguration) {
-        try {
-            return builder.routes()
-                    .route(p -> p
-                            .path("/test/**")
-                            .filters(f -> f.rewritePath("/test/(.*)", "/test/testGateway"))
-                            .uri(uriConfiguration.getUrl()))
+            try {
+                return builder.routes()
+                        .route(p -> p
+                                .path("/test/**")
 
-                    .route(p -> p.path("/register/**").and().method(HttpMethod.POST)
+                                .filters(f -> f.setPath(uriConfiguration.getUrl() + "/test/testGateway")
+                                        .filter(httpRequestInfo))
+                                .uri(uriConfiguration.getUrl()))
 
-                            .filters(f -> f.rewritePath("/register", "/user/register"))
-                            .uri(uriConfiguration.getUrl()))
 
-                    .route(p -> p.path("/getfile/**").and().method(HttpMethod.GET)
-                            .filters(f -> f.rewritePath("/getfile/(?<segment>.*)", "/record/showRecord/${segment}"))
-                            .uri(uriConfiguration.getUrl()))
+                        .route(p -> p.path("/register/**")
 
-                    .route(p -> p.path("/getfiles/**").and().method(HttpMethod.GET)
-                            .filters(f -> f.rewritePath("/getfiles", "/minio/files"))
-                            .uri(uriConfiguration.getUrl()))
+                                .filters(f -> f.rewritePath("/register", "/user/register")
+                                        .filter(httpRequestInfo))
+                                .uri(uriConfiguration.getUrl()))
 
-                    .route(p -> p.path("/postrecord/**").and().method(HttpMethod.POST)
-                            .filters(f -> f.rewritePath("/postrecord", "/record/put"))
-                            .uri(uriConfiguration.getUrl()))
+                        .route(p -> p.path("/getfile/**").and().method(HttpMethod.GET)
+                                .filters(f -> f.rewritePath("/getfile/(?<segment>.*)", "/record/showRecord/${segment}")
+                                        .filter(httpRequestInfo))
+                                .uri(uriConfiguration.getUrl()))
 
-                    .route(p -> p.path("/postminio/**").and().method(HttpMethod.POST)
-                            .filters(f -> f.rewritePath("/postminio/(?<segment>.*)", "/record/check/${segment}"))
-                            .uri(uriConfiguration.getUrl()))
+                        .route(p -> p.path("/getfiles/**").and().method(HttpMethod.GET)
+                                .filters(f -> f.rewritePath("/getfiles", "/minio/files")
+                                        .filter(httpRequestInfo))
+                                .uri(uriConfiguration.getUrl()))
 
-                    .route(p -> p.path("/delete/**").and().method(HttpMethod.DELETE)
-                            .filters(f -> f.rewritePath("/delete/(?<segment>.*)", "/minio/deleteByUserRole/${segment}"))
-                            .uri(uriConfiguration.getUrl()))
-                    .build();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+                        .route(p -> p.path("/postrecord/**").and().method(HttpMethod.POST)
+                                .and().readBody(String.class, requestBody -> {return true;})
+                                .filters(f -> f.rewritePath("/postrecord", "/record/put")
+                                        .filter(httpRequestInfo)
+                                        .filter(payloadFilter)
+
+                                        )
+
+                                .uri(uriConfiguration.getUrl()))
+
+                        .route(p -> p.path("/postminio/**").and().method(HttpMethod.POST)
+                                .filters(f -> f.rewritePath("/postminio/(?<segment>.*)", "/record/check/${segment}")
+                                        .filter(httpRequestInfo))
+                                .uri(uriConfiguration.getUrl()))
+
+                        .route(p -> p.path("/delete/**").and().method(HttpMethod.DELETE)
+                                .filters(f -> f.rewritePath("/delete/(?<segment>.*)", "/minio/deleteByUserRole/${segment}")
+                                        .filter(httpRequestInfo))
+                                .uri(uriConfiguration.getUrl()))
+                        .build();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+
         return null;
     }
+
 
 }
 

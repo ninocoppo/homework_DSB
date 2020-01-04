@@ -9,8 +9,8 @@
         <module name="first_homework" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="first_homework" target="1.8" />
+    <bytecodeTargetLevel target="12">
+      <module name="first_homework" target="12" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

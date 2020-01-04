@@ -33,7 +33,7 @@ public class AdapterConfiguration extends WebSecurityConfigurerAdapter {
                 /*Record Controller*/
                 .antMatchers(HttpMethod.POST,"/record/put").hasAnyAuthority("USER,ADMIN")
                 .antMatchers(HttpMethod.GET,"/record/showRecord/{id}").hasAnyAuthority("USER,ADMIN")
-                .antMatchers(HttpMethod.POST,"record/update/{id},{objectName}").hasAnyAuthority("USER,ADMIN")
+                .antMatchers(HttpMethod.POST,"/record/update/{id},{objectName}").hasAnyAuthority("USER,ADMIN")
                 .antMatchers(HttpMethod.GET,"/test/testGateway").permitAll()
                 /*Minio Controller*/
                 .antMatchers(HttpMethod.GET,"/minio/files").hasAnyAuthority("USER,ADMIN")

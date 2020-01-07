@@ -7,18 +7,18 @@ services:
             context: ./homework_DSB
             dockerfile: Dockerfile
         depends_on:
-            - db
+            - mysql
             - minio
         links:
-            - db
+            - mysql
             - minio
         environment:
-          - DB_URL=jdbc:mysql://dockermysql:3306/homework_db
+          - DB_URL=jdbc:mysql://mysql:3306/homework_db
           - DB_USERNAME=mauro
           - DB_PASSWORD=mauro
           - ACCESS_KEY=mauro
           - SECRET_KEY=maurolabruna
-          - MINIO_URL=http://dockerminio:9000
+          - MINIO_URL=http://minio:9000
           #Change Tomcat default port. Passed it as env variable
           #because Docker doesn't change it
           - PORT=8081
@@ -28,9 +28,9 @@ services:
             - "8081"
         volumes:
             - ./homework_DSB/storage:/data/
-        restart: on-failure:2
-    db:
-        container_name: dockermysql
+        
+    mysql:
+        container_name: mysql
         image: mysql
         environment:
             - MYSQL_ROOT_USER=root
@@ -43,7 +43,7 @@ services:
         volumes:
             - ./storage:/db/storage
     minio:
-        container_name: dockerminio
+        container_name: minio
         image: minio/minio
         environment:
             - MINIO_ACCESS_KEY=mauro
@@ -57,7 +57,7 @@ services:
         volumes:
             - ./storage:/minio/storage
     api_gateway:
-        container_name: apigateway
+        container_name: api_gateway
         environment:
             - URL=http://myapp:8081
             - RESPONSE_TIMEOUT=2000
@@ -82,12 +82,13 @@ services:
         container_name: prometheus
         image: prom/prometheus
         volumes:
-            - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+            - ./prometheus/:/etc/prometheus/
         ports:
             - 9090:9090
         command:
             - --config.file=/etc/prometheus/prometheus.yml
         depends_on:
             - api_gateway
+
         
     

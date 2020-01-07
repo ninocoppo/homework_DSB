@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.20.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: myapp
+  name: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: myapp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.20.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: myapp
+    spec:
+      containers:
+      - env:
+        - name: ACCESS_KEY
+          value: mauro
+        - name: DB_PASSWORD
+          value: mauro
+        - name: DB_URL
+          value: jdbc:mysql://mysql:3306/homework_db
+        - name: DB_USERNAME
+          value: mauro
+        - name: MINIO_URL
+          value: http://minio:9000
+        - name: PORT
+          value: "8081"
+        - name: SECRET_KEY
+          value: maurolabruna
+        image: myapp
+        imagePullPolicy: Never
+        name: myapp
+        ports:
+        - containerPort: 8081
+        resources: {}
+        volumeMounts:
+        - mountPath: /data/
+          name: application-claim0
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: application-claim0
+        persistentVolumeClaim:
+          claimName: application-claim0
+status: {}

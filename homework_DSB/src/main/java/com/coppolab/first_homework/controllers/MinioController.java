@@ -72,7 +72,9 @@ public class MinioController {
     //DELETE by userROLE
 
     @DeleteMapping(path = "/deleteByUserRole/{id}")
+
     public @ResponseBody ResponseEntity<String> deleteByUserRole(@PathVariable int id){
+
         return minioService.deleteByUserRole(id);
     }
 

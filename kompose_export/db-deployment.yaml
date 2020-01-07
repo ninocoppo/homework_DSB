@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.20.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.20.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: db
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: homework_db
+        - name: MYSQL_PASSWORD
+          value: mauro
+        - name: MYSQL_ROOT_PASSWORD
+          value: secret
+        - name: MYSQL_ROOT_USER
+          value: root
+        - name: MYSQL_USER
+          value: mauro
+        image: mysql
+        imagePullPolicy: ""
+        name: dockermysql
+        ports:
+        - containerPort: 3306
+        resources: {}
+        volumeMounts:
+        - mountPath: /db/storage
+          name: db-claim0
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: db-claim0
+        persistentVolumeClaim:
+          claimName: db-claim0
+status: {}

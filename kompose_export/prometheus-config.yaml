@@ -11,7 +11,7 @@ data:
     \   static_configs:\n      - targets: ['localhost:9090']\n\n  - job_name:       'api_gateway'\n\n
     \   # Override the global default and scrape targets from this job every 5 seconds.\n
     \   scrape_interval: 5s\n    \n    metrics_path: /actuator/prometheus\n\n    static_configs:\n
-    \     - targets: \n        - apigateway:8080\n"
+    \     - targets: \n        - api-gateway:8080\n"
 kind: ConfigMap
 metadata:
   creationTimestamp: null

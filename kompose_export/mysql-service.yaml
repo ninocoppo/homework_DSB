@@ -9,6 +9,7 @@ metadata:
     io.kompose.service: mysql
   name: mysql
 spec:
+  type: NodePort
   ports:
   - name: "3307"
     #port is the port exposed to the other pods

@@ -38,7 +38,7 @@ public class PayloadFilter implements GatewayFilter, Ordered {
         }
         String filename = (String)result.get("filename");
 
-        File file =new File("../homework_DSB/storage/"+filename);
+        File file = new File("../homework_DSB/files/"+filename);
         if(!file.exists()){
             throw new RuntimeException("File doesn't exist");
         }

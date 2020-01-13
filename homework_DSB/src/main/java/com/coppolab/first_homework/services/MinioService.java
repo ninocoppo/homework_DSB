@@ -90,7 +90,7 @@ public class MinioService {
     public ResponseEntity uploadFile(String bucketName, String objectName, String fileName) {
         try {
             //filename = path of the container storage + filename
-            this.minioClient.putObject(bucketName, objectName, "/storage/"+fileName);
+            this.minioClient.putObject(bucketName, objectName, fileName);
             //this.minioClient.putObject(bucketName, objectName, fileName);
             System.out.println("File upload successfully");
             return new ResponseEntity(HttpStatus.OK);

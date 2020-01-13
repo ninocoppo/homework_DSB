@@ -27,8 +27,8 @@ services:
         expose:
             - "8081"
         volumes:
-            - ./homework_DSB/storage:/data/
-        
+            - ./homework_DSB/files:/data/
+        restart: on-failure
     mysql:
         container_name: mysql
         image: mysql
@@ -76,7 +76,7 @@ services:
         depends_on:
             - application
         volumes:
-            - ./storage:/api_gateway/storage
+            - ../Homework:/api_gateway/
     
     prometheus:
         container_name: prometheus

@@ -31,12 +31,13 @@ spec:
         - name: PORT
           value: "8080"
         - name: RESPONSE_TIMEOUT
-          value: "2000"
+          value: "5000"
         - name: URL
           value: http://myapp:8081
         image: api_gateway
         imagePullPolicy: Never
         name: api-gateway
+        workingDir: /api_gateway/storage/api_gateway
         ports:
         - containerPort: 8080
         resources: {}
@@ -48,5 +49,5 @@ spec:
       volumes:
       - name: api-gateway-claim0
         persistentVolumeClaim:
-          claimName: api-gateway-claim0
+          claimName: api-gateway-pvc
 status: {}

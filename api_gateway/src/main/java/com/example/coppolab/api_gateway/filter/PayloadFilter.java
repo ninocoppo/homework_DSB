@@ -3,6 +3,7 @@ package com.example.coppolab.api_gateway.filter;
 import com.example.coppolab.api_gateway.configuration.UriConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
@@ -17,7 +18,8 @@ import java.util.HashMap;
 public class PayloadFilter implements GatewayFilter, Ordered {
 
     UriConfiguration uriConfiguration = new UriConfiguration();
-    private final long MAX_FILE_SIZE = this.uriConfiguration.getMaxFileSize();
+    @Value("${application.maximum_file_size}")
+    private long MAX_FILE_SIZE;
 
 
     @Override

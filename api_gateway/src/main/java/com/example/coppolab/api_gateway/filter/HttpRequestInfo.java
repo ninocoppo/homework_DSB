@@ -28,6 +28,7 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
     String uri = "";
     String status_code="";
     String req_outcome="";
+    String request_response_time="";
 
 
     @Override
@@ -50,6 +51,7 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
             System.out.println("Status response code: " + response.getStatusCode());
             this.status_code = response.getStatusCode().toString();
             this.req_outcome = response.getStatusCode().getReasonPhrase();
+
 
             this.metrics.getRegistry().config().commonTags();
             //Stop the timer and add the timer to the registry

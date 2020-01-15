@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @SpringBootApplication
 @Component
 public class SpoutApplication {
@@ -16,19 +18,20 @@ public class SpoutApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpoutApplication.class, args);
 
-        /*
-        for(int i = 0; i< 10; i++) {
-            KafkaProducer.template.send("Nappa", "ciaociaoxx"+i);
-            System.out.println("Message sent");
-        }
-*/
+
         HttpConnectionConfig httpConnectionConfig = new HttpConnectionConfig();
-        String response = httpConnectionConfig.doRequest("http://localhost:9090/api/v1/query?query=http_request_timer_seconds_max");
-        System.out.println(response);
 
-
-
-
+        while(true) {
+            String response = httpConnectionConfig.doRequest("http://localhost:9090/api/v1/query?query=http_request_timer_seconds_max");
+            System.out.println("SERVER response: "+response);
+            KafkaProducer.template.send("Metrics", response);
+            System.out.println("Message sent");
+            try {
+                TimeUnit.SECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

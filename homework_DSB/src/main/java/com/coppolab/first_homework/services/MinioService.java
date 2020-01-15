@@ -46,6 +46,9 @@ public class MinioService {
     @Autowired
     RecordRepository recordRepository;
 
+
+    MinioDiscoveryService minioDiscoveryService;
+
     public MinioService() throws InvalidPortException, InvalidEndpointException {
 
         this.minioConfig = new MinioConfig();
@@ -58,6 +61,10 @@ public class MinioService {
 
         this.minioClient = new MinioClient(url, accesskey, secretkey);
         System.out.println("Minio Client Running");
+
+        //this.minioDiscoveryService.resolve("172.17.0.8");
+        System.out.println("File upload successfully");
+
     }
 
     public void createBucket(User user) {
@@ -92,7 +99,8 @@ public class MinioService {
             //filename = path of the container storage + filename
             this.minioClient.putObject(bucketName, objectName, fileName);
             //this.minioClient.putObject(bucketName, objectName, fileName);
-            System.out.println("File upload successfully");
+            //this.minioDiscoveryService = new MinioDiscoveryService();
+
             return new ResponseEntity(HttpStatus.OK);
         } catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
             e.printStackTrace();

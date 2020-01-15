@@ -57,7 +57,7 @@ services:
         volumes:
             - ./storage:/minio/storage
     api_gateway:
-        container_name: api_gateway
+        container_name: apigateway  //For prometheus
         environment:
             - URL=http://myapp:8081
             - RESPONSE_TIMEOUT=2000

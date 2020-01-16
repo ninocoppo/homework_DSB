@@ -1,3 +1,4 @@
-minikube start
-nohup minikube mount ./:/storage &&
+minikube start --memory 3000
 eval $(minikube docker-env)
+minikube mount ./:/storage
+

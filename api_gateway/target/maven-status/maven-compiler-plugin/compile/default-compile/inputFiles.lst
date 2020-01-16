@@ -1,4 +1,5 @@
 /home/mauro/Università/Sistemi Distribuiti/Homework/api_gateway/src/main/java/com/example/coppolab/api_gateway/context/Metrics.java
+/home/mauro/Università/Sistemi Distribuiti/Homework/api_gateway/src/main/java/com/example/coppolab/api_gateway/filter/MinioObjectUrlFilter.java
 /home/mauro/Università/Sistemi Distribuiti/Homework/api_gateway/src/main/java/com/example/coppolab/api_gateway/configuration/UriConfiguration.java
 /home/mauro/Università/Sistemi Distribuiti/Homework/api_gateway/src/main/java/com/example/coppolab/api_gateway/ApiGatewayApplication.java
 /home/mauro/Università/Sistemi Distribuiti/Homework/api_gateway/src/main/java/com/example/coppolab/api_gateway/filter/PayloadFilter.java

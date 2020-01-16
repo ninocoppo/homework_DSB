@@ -5,9 +5,7 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.20.0 (HEAD)
   creationTimestamp: null
-  labels:
-    io.kompose.service: minio
-  name: minio
+  name: minio-service
 spec:
   type: LoadBalancer
   ports:

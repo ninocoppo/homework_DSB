@@ -3,6 +3,7 @@ package com.example.coppolab.api_gateway;
 
 import com.example.coppolab.api_gateway.configuration.UriConfiguration;
 import com.example.coppolab.api_gateway.filter.HttpRequestInfo;
+import com.example.coppolab.api_gateway.filter.MinioObjectUrlFilter;
 import com.example.coppolab.api_gateway.filter.PayloadFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,7 +30,7 @@ public class ApiGatewayApplication {
     }
 
     @Bean
-    public RouteLocator myRoutes(RouteLocatorBuilder builder, UriConfiguration uriConfiguration, HttpRequestInfo httpRequestInfo, PayloadFilter payloadFilter) {
+    public RouteLocator myRoutes(RouteLocatorBuilder builder, UriConfiguration uriConfiguration, HttpRequestInfo httpRequestInfo, PayloadFilter payloadFilter, MinioObjectUrlFilter minioObjectUrlFilter) {
 
             try {
                 return builder.routes()
@@ -49,7 +50,9 @@ public class ApiGatewayApplication {
 
                         .route(p -> p.path("/getfile/**").and().method(HttpMethod.GET)
                                 .filters(f -> f.rewritePath("/getfile/(?<segment>.*)", "/record/showRecord/${segment}")
-                                        .filter(httpRequestInfo))
+                                        .filter(httpRequestInfo)
+                                        .filter(minioObjectUrlFilter))
+
                                 .uri(uriConfiguration.getUrl()))
 
                         .route(p -> p.path("/getfiles/**").and().method(HttpMethod.GET)

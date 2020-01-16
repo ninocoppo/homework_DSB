@@ -8,16 +8,22 @@ import java.net.UnknownHostException;
 @Service
 public class MinioDiscoveryService {
 
-    public void resolve(String host) {
-        try {
-            InetAddress inetAddress = InetAddress.getByName(host);
+    InetAddress[] ipAddresses;
 
-            System.out.println("Host: " +
-                    inetAddress.getHostName());
-            System.out.println("IP Address: " +
-                    inetAddress.getHostAddress());
+    public InetAddress[] resolve(String host) {
+        try {
+            InetAddress inetAddress[] = InetAddress.getAllByName(host);
+            //minio-headless-service.default.svc.cluster.local
+
+            for(InetAddress i: inetAddress){
+                System.out.println("Host: "+i.getHostName());
+                System.out.println("IP Addr: "+i.getHostAddress());
+            }
+            return inetAddress;
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }

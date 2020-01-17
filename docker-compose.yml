@@ -76,7 +76,7 @@ services:
         depends_on:
             - application
         volumes:
-            - ../Homework:/api_gateway/
+            - ./:/api_gateway/
     
     prometheus:
         container_name: prometheus

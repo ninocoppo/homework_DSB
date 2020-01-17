@@ -1,0 +1,38 @@
+<200
+{"status":"success"
+"data":{"resultType":"vector"
+"result":[]}}
+[Content-Type:"application/json"
+ Date:"Wed
+ 15 Jan 2020 16:35:35 GMT"
+ Content-Length:"63"]>
+<200
+{"status":"success"
+"data":{"resultType":"vector"
+"result":[{"metric":{"Routed_uri":"null/user/register"
+"http_method":"POST"
+"instance":"apigateway:8080"
+"job":"api_gateway"
+"outcome":"OK"
+"response":"200 OK"}
+"value":[1579106145.7
+"2.058590887"]}]}}
+[Content-Type:"application/json"
+ Date:"Wed
+ 15 Jan 2020 16:35:45 GMT"
+ Content-Length:"251"]>
+<200
+{"status":"success"
+"data":{"resultType":"vector"
+"result":[{"metric":{"Routed_uri":"null/user/register"
+"http_method":"POST"
+"instance":"apigateway:8080"
+"job":"api_gateway"
+"outcome":"OK"
+"response":"200 OK"}
+"value":[1579106155.723
+"2.058590887"]}]}}
+[Content-Type:"application/json"
+ Date:"Wed
+ 15 Jan 2020 16:35:55 GMT"
+ Content-Length:"253"]>

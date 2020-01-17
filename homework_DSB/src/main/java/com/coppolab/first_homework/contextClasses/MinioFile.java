@@ -5,6 +5,7 @@ public class MinioFile {
     private String filename;
     private String objectName;
     private String bucketName;
+    private int recordId;
 
     public String getFilename() {
         return filename;
@@ -20,6 +21,14 @@ public class MinioFile {
 
     public void setObjectName(String objectName) {
         this.objectName = objectName;
+    }
+
+    public int getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(int recordId) {
+        this.recordId = recordId;
     }
 
     public String getBucketName() {

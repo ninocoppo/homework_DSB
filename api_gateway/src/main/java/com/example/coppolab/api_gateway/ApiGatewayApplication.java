@@ -31,6 +31,7 @@ public class ApiGatewayApplication {
     @Bean
     public RouteLocator myRoutes(RouteLocatorBuilder builder, UriConfiguration uriConfiguration, HttpRequestInfo httpRequestInfo, PayloadFilter payloadFilter) {
 
+
             try {
                 return builder.routes()
                         .route(p -> p
@@ -40,40 +41,45 @@ public class ApiGatewayApplication {
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
+
                         // Register a user with POST command
                         .route(p -> p.path("/register/**")
 
                                 .filters(f -> f.rewritePath("/register", "/user/register")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
+
                         // Return the file that correspond to the id_record
-                        .route(p -> p.path("/get/**").and().method(HttpMethod.GET)
-                                .filters(f -> f.rewritePath("/get/(?<segment>.*)", "/record/showRecord/${segment}")
+                        .route(p -> p.path("/**").and().method(HttpMethod.GET)
+                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/showRecord/${segment}")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
                         // Return a list of files of authenticated user
-                        .route(p -> p.path("/get").and().method(HttpMethod.GET)
-                                .filters(f -> f.rewritePath("/get", "/minio/files")
+                        .route(p -> p.path("/").and().method(HttpMethod.GET)
+                                .filters(f -> f.rewritePath("/", "/minio/files")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
                         // Insert new record
-                        .route(p -> p.path("/post").and().method(HttpMethod.POST)
+                        .route(p -> p.path("/").and().method(HttpMethod.POST)
                                 .and().readBody(String.class, requestBody -> {return true;})
-                                .filters(f -> f.rewritePath("/post", "/record/put")
+                                .filters(f -> f.rewritePath("/", "/record/put")
+
                                         .filter(httpRequestInfo)
                                         .filter(payloadFilter)
 
                                         )
 
                                 .uri(uriConfiguration.getUrl()))
+
                         // Upload file in minio
-                        .route(p -> p.path("/post/**").and().method(HttpMethod.POST)
-                                .filters(f -> f.rewritePath("/post/(?<segment>.*)", "/record/check/${segment}")
+                        .route(p -> p.path("/**").and().method(HttpMethod.POST)
+                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/check/${segment}")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
+
                         // Delete a file
-                        .route(p -> p.path("/delete/**").and().method(HttpMethod.DELETE)
-                                .filters(f -> f.rewritePath("/delete/(?<segment>.*)", "/minio/deleteByUserRole/${segment}")
+                        .route(p -> p.path("/**").and().method(HttpMethod.DELETE)
+                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/minio/deleteByUserRole/${segment}")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
                         .build();

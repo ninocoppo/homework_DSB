@@ -58,7 +58,11 @@ services:
         volumes:
             - ./storage:/minio/storage
     api_gateway:
+<<<<<<< HEAD
         container_name: api_gateway
+=======
+        container_name: apigateway
+>>>>>>> f411014d665593498e3a74c5cbd2d305ee9043ac
         environment:
             - URL=http://myapp:8081
             - RESPONSE_TIMEOUT=2000

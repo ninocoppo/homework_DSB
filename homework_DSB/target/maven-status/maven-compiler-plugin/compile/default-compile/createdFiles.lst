@@ -16,4 +16,5 @@ com/coppolab/first_homework/contextClasses/MinioFile.class
 com/coppolab/first_homework/services/AdapterUserDetailsService.class
 com/coppolab/first_homework/config/MinioConfig.class
 com/coppolab/first_homework/services/UserService.class
+com/coppolab/first_homework/services/MinioDiscoveryService.class
 com/coppolab/first_homework/interfaces/RecordRepository.class

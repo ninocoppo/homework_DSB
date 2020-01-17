@@ -16,7 +16,9 @@ public class Record {
     //File name in the bucket
     private String objectName;
 
+
     private String status;
+
 
     @ManyToOne
     private User author;

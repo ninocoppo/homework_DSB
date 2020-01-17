@@ -21,9 +21,11 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
 
     UriConfiguration uriConfiguration = new UriConfiguration();
 
+
     PayloadFilter payloadFilter = new PayloadFilter();
 
-    String payload_size_input = Long.toString(payloadFilter.payload_size_input());
+
+
 
     String url = uriConfiguration.getUrl();
     String method = "";
@@ -31,6 +33,8 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
     String uri = "";
     String status_code="";
     String req_outcome="";
+
+
 
 
     @Override
@@ -54,14 +58,15 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
             this.status_code = response.getStatusCode().toString();
             this.req_outcome = response.getStatusCode().getReasonPhrase();
 
+
             this.metrics.getRegistry().config().commonTags();
             //Stop the timer and add the timer to the registry
             sample.stop(this.metrics.getRegistry().timer("http.request.timer",
                     "Routed.uri",this.uri,
                     "http.method",this.method,
                     "response", status_code,
-                    "outcome",req_outcome,
-                    "payload.size",this.payload_size_input));
+                    "outcome",req_outcome));
+
 
 
         }));

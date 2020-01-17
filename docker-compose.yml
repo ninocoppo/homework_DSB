@@ -12,7 +12,9 @@ services:
         links:
             - mysql
             - minio
+
         restart: on-failure:2
+
         environment:
           - DB_URL=jdbc:mysql://mysql:3306/homework_db
           - DB_USERNAME=mauro
@@ -28,8 +30,10 @@ services:
         expose:
             - "8081"
         volumes:
-            - ./homework_DSB/storage:/data/
-        
+
+            - ./homework_DSB/files:/data/
+        restart: on-failure
+
     mysql:
         container_name: mysql
         image: mysql
@@ -58,7 +62,9 @@ services:
         volumes:
             - ./storage:/minio/storage
     api_gateway:
-        container_name: api_gateway
+
+        container_name: apigateway  #For prometheus
+
         environment:
             - URL=http://myapp:8081
             - RESPONSE_TIMEOUT=2000
@@ -77,7 +83,9 @@ services:
         depends_on:
             - application
         volumes:
-            - ./storage:/api_gateway/storage
+
+            - ./:/api_gateway/
+
     
     prometheus:
         container_name: prometheus

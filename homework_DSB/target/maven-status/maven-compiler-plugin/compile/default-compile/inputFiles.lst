@@ -16,3 +16,4 @@
 /home/nino/Scrivania/homework_DSB-kubernetes/homework_DSB/src/main/java/com/coppolab/first_homework/FirstHomeworkApplication.java
 /home/nino/Scrivania/homework_DSB-kubernetes/homework_DSB/src/main/java/com/coppolab/first_homework/services/SecurityService.java
 /home/nino/Scrivania/homework_DSB-kubernetes/homework_DSB/src/main/java/com/coppolab/first_homework/interfaces/RecordRepository.java
+/home/nino/Scrivania/homework_DSB-kubernetes/homework_DSB/src/main/java/com/coppolab/first_homework/services/MinioDiscoveryService.java

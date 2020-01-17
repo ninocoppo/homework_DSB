@@ -1,6 +1,8 @@
 package com.coppolab.first_homework.entity;
 
+
 import org.checkerframework.common.aliasing.qual.Unique;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

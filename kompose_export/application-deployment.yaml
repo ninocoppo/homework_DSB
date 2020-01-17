@@ -43,21 +43,23 @@ spec:
         image: myapp
         imagePullPolicy: Never
         name: myapp
+
+        workingDir: /myapp/storage/homework_DSB/files/
+
         ports:
         - containerPort: 8081
         resources: {}
         volumeMounts:
-        - mountPath: /data/
+
+        - mountPath: /myapp/storage
           name: application-claim0
-        - mountPath: /home/nino/Scrivania/homework_DSB-kubernetes/homework_DSB/storage/
-          name: testclaim
+
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
       - name: application-claim0
         persistentVolumeClaim:
-          claimName: application-claim0
-      - name: testclaim
-        persistentVolumeClaim:
-          claimName: testclaim
+
+          claimName: myapp-pvc
+
 status: {}

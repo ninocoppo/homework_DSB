@@ -92,13 +92,18 @@ public class MinioService {
 
         Optional<Record> r = recordRepository.findById(recordId);
         Record record = r.get();
+
         try {
 
             for(int i = 0; i < minioClient.size(); i++) {
+
                 //filename = path of the container storage + filename
+
                 this.minioClient.get(i).putObject(bucketName, objectName, fileName);
+
             }
             record.setStatus("Available");
+
             recordRepository.save(record);
 
 
@@ -145,8 +150,8 @@ public class MinioService {
 
                         info.put("Object Name", myFile.get().objectName());
 
-                        System.err.println("Bucket name: " + info.get((Object) "Bucket Name"));
-                        System.err.println("Object name: " + info.get((Object) "Object Name"));
+                        System.out.println("Bucket name: " + info.get((Object) "Bucket Name"));
+                        System.out.println("Object name: " + info.get((Object) "Object Name"));
 
                         return info;
                     }

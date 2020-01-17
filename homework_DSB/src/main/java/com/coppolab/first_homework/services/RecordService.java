@@ -83,16 +83,20 @@ public class RecordService {
         /*Sto supponendo che l'id passato dal client sia l'id del record*/
         Optional<Record> r = recordRepository.findById(id);
         Record record = r.get();
+
         if (record.getStatus().equals("WaitingUpload")) {
+            record.setStatus("Uploades");
+            recordRepository.save(record);
             User user = record.getAuthor();
             String nickname = user.getNickname();
             /*If the record is associated to the authenticated user*/
             if (nickname.equals(securityService.getAuthenticatedUser())) {
-                this.updateRecord(id, record.getFilename());
                 Optional<Record> r1 = recordRepository.findById(id);
                 Record record1 = r1.get();
                 record1.setStatus("Uploading");
+                recordRepository.save(record1);
                 minioService.uploadFile(nickname, record.getFilename(), record.getFilename(), id);
+                this.updateRecord(id, record.getFilename());
 
                 return new ResponseEntity(record, HttpStatus.ACCEPTED);
             }
@@ -109,10 +113,10 @@ public class RecordService {
         Map<String,String> fileInfo;
 
         fileInfo = minioService.getFileInfo(record.getAuthor().getNickname(),objectName);
+        System.out.println("NOME RECORDOPOOOOKLEç"+fileInfo);
         record.setBucketName(fileInfo.get((String)"Bucket Name"));
         record.setObjectName(fileInfo.get((String)"Object Name"));
-        record.setStatus("Uploades");
-        recordRepository.save(record);
+
         return new ResponseEntity<>(record,HttpStatus.ACCEPTED);
     }
 

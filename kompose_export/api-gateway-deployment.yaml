@@ -4,10 +4,8 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.20.0 (HEAD)
-<<<<<<< HEAD
-=======
     ingress.kubernetes.io/ssl-redirect: "false"
->>>>>>> f411014d665593498e3a74c5cbd2d305ee9043ac
+
   creationTimestamp: null
   labels:
     io.kompose.service: api-gateway
@@ -15,10 +13,6 @@ metadata:
 spec:
   replicas: 1
   selector:
-<<<<<<< HEAD
-  
-=======
->>>>>>> f411014d665593498e3a74c5cbd2d305ee9043ac
     matchLabels:
       io.kompose.service: api-gateway
   strategy:

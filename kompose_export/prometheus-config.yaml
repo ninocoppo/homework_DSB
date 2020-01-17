@@ -1,0 +1,19 @@
+apiVersion: v1
+data:
+  prometheus.yml: "global:\n  scrape_interval:     15s # By default, scrape targets
+    every 15 seconds.\n\n  # Attach these labels to any time series or alerts when
+    communicating with\n  # external systems (federation, remote storage, Alertmanager).\n
+    \ external_labels:\n    monitor: 'codelab-monitor'\n\n# A scrape configuration
+    containing exactly one endpoint to scrape:\n# Here it's Prometheus itself.\nscrape_configs:\n
+    \ # The job name is added as a label `job=<job_name>` to any timeseries scraped
+    from this config.\n  - job_name: 'prometheus'\n\n    # Override the global default
+    and scrape targets from this job every 5 seconds.\n    scrape_interval: 5s\n\n
+    \   static_configs:\n      - targets: ['localhost:9090']\n\n  - job_name:       'api_gateway'\n\n
+    \   # Override the global default and scrape targets from this job every 5 seconds.\n
+    \   scrape_interval: 5s\n    \n    metrics_path: /actuator/prometheus\n\n    static_configs:\n
+    \     - targets: \n        - api-gateway:8080\n"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: prometheus-config
+  selfLink: /api/v1/namespaces/default/configmaps/prometheus-config

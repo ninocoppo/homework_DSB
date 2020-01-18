@@ -61,7 +61,7 @@ public class MinioService {
 
         String urlMinioService=inetUrlVector[0].getHostAddress();
 
-        urlMinioClient = new MinioClient(urlMinioService,9000,accesskey,secretkey,false);
+
 
 
 
@@ -72,6 +72,8 @@ public class MinioService {
         System.out.println(this.minioConfig.getAccess_key());
         System.out.println(this.secretkey);
         System.out.println(this.url);
+
+        urlMinioClient = new MinioClient(urlMinioService,9000,accesskey,secretkey,false);
 
 
         InetAddress[] ipAddress = this.minioDiscoveryService.resolve("minio-headless-service");

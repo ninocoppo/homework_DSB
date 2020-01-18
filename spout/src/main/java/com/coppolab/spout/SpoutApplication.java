@@ -23,7 +23,9 @@ public class SpoutApplication {
 
         while(true) {
             String response = httpConnectionConfig.doRequest("http://localhost:9090/api/v1/query?query=http_request_timer_seconds_max");
+
             System.out.println("SERVER response: "+response);
+
             KafkaProducer.template.send("Metrics", response);
             System.out.println("Message sent");
             try {

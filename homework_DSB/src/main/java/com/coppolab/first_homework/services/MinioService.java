@@ -40,6 +40,8 @@ public class MinioService {
 
     private List<MinioClient> minioClient = new ArrayList<>();
 
+    private MinioClient urlMinioClient;
+
     @Autowired
     private SecurityService securityService;
     @Autowired
@@ -54,6 +56,13 @@ public class MinioService {
     public MinioService() throws InvalidPortException, InvalidEndpointException {
 
         minioDiscoveryService = new MinioDiscoveryService();
+
+        InetAddress[] inetUrlVector = this.minioDiscoveryService.resolve("minio-service");
+
+        String urlMinioService=inetUrlVector[0].getHostAddress();
+
+        urlMinioClient = new MinioClient(urlMinioService,9000,accesskey,secretkey,false);
+
 
 
         this.minioConfig = new MinioConfig();
@@ -124,7 +133,10 @@ public class MinioService {
 
         try {
 
-            return this.minioClient.get(0).presignedGetObject(bucketName, objectName);
+            String originalUrl=this.minioClient.get(0).presignedGetObject(bucketName, objectName);
+            System.out.println("Original URL: "+originalUrl);
+            System.out.println("Modified URL: "+this.urlMinioClient.presignedGetObject(bucketName,objectName));
+            return this.urlMinioClient.presignedGetObject(bucketName,objectName);
 
 
         }catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {

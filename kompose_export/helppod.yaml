@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: helppod
+spec:
+  volumes:
+    - name: testclaim
+      persistentVolumeClaim:
+        claimName: testclaim
+  containers:
+    - name: helppod
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: /home/nino/Scrivania/homework_DSB-kubernetes/homework_DSB/storage/test1
+          subPath: test1
+          name: testclaim

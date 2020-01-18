@@ -5,6 +5,7 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.20.0 (HEAD)
     ingress.kubernetes.io/ssl-redirect: "false"
+
   creationTimestamp: null
   labels:
     io.kompose.service: api-gateway
@@ -32,23 +33,31 @@ spec:
         - name: PORT
           value: "8080"
         - name: RESPONSE_TIMEOUT
+
           value: "5000"
+
         - name: URL
           value: http://myapp:8081
         image: api_gateway
         imagePullPolicy: Never
         name: api-gateway
+
         workingDir: /api_gateway/storage/api_gateway
         ports:
         - containerPort: 8080
+
         resources: {}
         volumeMounts:
         - mountPath: /api_gateway/storage
           name: api-gateway-claim0
+
+
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
       - name: api-gateway-claim0
         persistentVolumeClaim:
+
           claimName: api-gateway-pvc
+
 status: {}

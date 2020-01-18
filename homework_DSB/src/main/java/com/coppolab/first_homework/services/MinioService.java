@@ -18,13 +18,17 @@ import org.springframework.stereotype.Service;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+
 import java.net.InetAddress;
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Service
 public class MinioService {
+
+
 
     MinioConfig minioConfig;
 
@@ -35,12 +39,14 @@ public class MinioService {
     private String url;
 
     private List<MinioClient> minioClient = new ArrayList<>();
+
     @Autowired
     private SecurityService securityService;
     @Autowired
     UserRepository userRepository;
     @Autowired
     RecordRepository recordRepository;
+
 
 
     MinioDiscoveryService minioDiscoveryService;
@@ -58,6 +64,7 @@ public class MinioService {
         System.out.println(this.secretkey);
         System.out.println(this.url);
 
+
         InetAddress[] ipAddress = this.minioDiscoveryService.resolve("minio-headless-service");
         int length= ipAddress.length;
 
@@ -66,35 +73,48 @@ public class MinioService {
             System.out.println("Created connection with minio service with IP: "+ipAddress[i].getHostAddress());
         }
 
-
-
-
-
-
     }
 
     public void createBucket(User user) {
         try {
+
             for(int i=0; i<minioClient.size();i++) {
                 this.minioClient.get(i).makeBucket(user.getNickname());
             }
         } catch (InvalidBucketNameException | RegionConflictException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException e) {
+
             e.printStackTrace();
         }
         System.out.println("Bucket for user: " + user.getNickname() + " created");
     }
 
-    public ResponseEntity uploadFile(String bucketName, String objectName, String fileName) {
+    public ResponseEntity uploadFile(String bucketName, String objectName, String fileName, int recordId) {
+
+        Optional<Record> r = recordRepository.findById(recordId);
+        Record record = r.get();
+
         try {
+
             for(int i = 0; i < minioClient.size(); i++) {
+
                 //filename = path of the container storage + filename
+
                 this.minioClient.get(i).putObject(bucketName, objectName, fileName);
+
             }
+            record.setStatus("Available");
+
+            recordRepository.save(record);
 
 
             return new ResponseEntity(HttpStatus.OK);
         } catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
+            record.setStatus("UploadFailed");
+            //DELETE FILE FROM ALL REPLICAS
+            this.deleteByUserRole(recordId);
+            recordRepository.save(record);
             e.printStackTrace();
+
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
@@ -103,7 +123,9 @@ public class MinioService {
     public String getUrl(String bucketName,String objectName){
 
         try {
+
             return this.minioClient.get(0).presignedGetObject(bucketName, objectName);
+
 
         }catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
             e.printStackTrace();
@@ -116,7 +138,7 @@ public class MinioService {
         info.put("Bucket Name",nickname);
         try {
             /*Un utente può creare più file quindi il solo bucket name == nickname
-             * non basta per identificare il file cercato. Devo fare il for e quindi poi
+              * non basta per identificare il file cercato. Devo fare il for e quindi poi
              * fare l'equals con il nome del file all'interno del bucket. Devo passare
              * per forza l'objectName quindi come parametro*/
 
@@ -128,8 +150,8 @@ public class MinioService {
 
                         info.put("Object Name", myFile.get().objectName());
 
-                        System.err.println("Bucket name: " + info.get((Object) "Bucket Name"));
-                        System.err.println("Object name: " + info.get((Object) "Object Name"));
+                        System.out.println("Bucket name: " + info.get((Object) "Bucket Name"));
+                        System.out.println("Object name: " + info.get((Object) "Object Name"));
 
                         return info;
                     }
@@ -142,6 +164,7 @@ public class MinioService {
                 e.printStackTrace();
             }
             return null;
+
     }
 
     public String getFiles(String nickname){
@@ -149,17 +172,21 @@ public class MinioService {
         List<String> files = new ArrayList<>();
 
         try {
+
             for(int i = 0; i < minioClient.size(); i++) {
                 Iterable<Result<Item>> infos = this.minioClient.get(i).listObjects(nickname);
                 //Fill user's file list
                 for (Result<Item> info : infos) {
                     files.add(info.get().objectName());
                 }
+
             }
 
             return new Gson().toJson(files);
 
+
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | InvalidKeyException | ErrorResponseException | IOException | NoResponseException | InternalException e) {
+
             e.printStackTrace();
         }
         return null;
@@ -167,7 +194,7 @@ public class MinioService {
 
     public String getAllFiles(){
         try {
-                //Get the file always from the same replica minioClient(0)
+        //Get the file always from the same replica minioClient(0)
                 List<Bucket> buckets = this.minioClient.get(0).listBuckets();
                 List<String> files = new ArrayList<>();
                 for (Bucket b : buckets) {
@@ -175,6 +202,7 @@ public class MinioService {
                 }
 
                 return new Gson().toJson(files);
+
 
 
         } catch (InvalidBucketNameException e) {
@@ -220,6 +248,7 @@ public class MinioService {
         String objectName = record.getObjectName();
 
         try {
+
             for(int i = 0; i< minioClient.size(); i++) {
                 this.minioClient.get(i).removeObject(bucketName, objectName);
 
@@ -228,6 +257,7 @@ public class MinioService {
             return new ResponseEntity<>("OK", HttpStatus.OK);
 
         } catch (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException | InvalidArgumentException e) {
+
             e.printStackTrace();
         }
         //DA CAMBIARE
@@ -243,6 +273,7 @@ public class MinioService {
         User user = securityService.getAuthenticatedUserObject();
         if(record.getAuthor().getId()==user.getId()) {
             try {
+
                 for(int i = 0; i < minioClient.size(); i++) {
                     this.minioClient.get(i).removeObject(bucketName, objectName);
                  }
@@ -250,6 +281,7 @@ public class MinioService {
                 return new ResponseEntity<>("OK", HttpStatus.OK);
 
             } catch (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException | InvalidArgumentException e) {
+
                 e.printStackTrace();
             }
         }else{

@@ -27,7 +27,7 @@ public class RecordService {
 
 
     @Autowired
-    MinioService storageService;
+    MinioService minioService;
 
     public ResponseEntity<Record> saveRecord(RecordRequest recordRequest){
 
@@ -45,6 +45,11 @@ public class RecordService {
                 record.setFilename(recordRequest.getFilename());
 
                 record.setAuthor(user);
+
+                //SET STATUS OF THE RECORD
+                record.setStatus("WaitingUpload");
+
+
                 System.out.println("Record: " + record);
 
                 return new ResponseEntity<Record>(recordRepository.save(record),HttpStatus.OK);
@@ -78,15 +83,27 @@ public class RecordService {
         /*Sto supponendo che l'id passato dal client sia l'id del record*/
         Optional<Record> r = recordRepository.findById(id);
         Record record = r.get();
-        User user = record.getAuthor();
-        String nickname = user.getNickname();
-        /*If the record is associated to the authenticated user*/
-        if(nickname.equals(securityService.getAuthenticatedUser())){
-            storageService.uploadFile(nickname,record.getFilename(),record.getFilename());
-            this.updateRecord(id,record.getFilename());
-            return new ResponseEntity(record,HttpStatus.ACCEPTED);
+
+        if (record.getStatus().equals("WaitingUpload")) {
+            record.setStatus("Uploades");
+            recordRepository.save(record);
+            User user = record.getAuthor();
+            String nickname = user.getNickname();
+            /*If the record is associated to the authenticated user*/
+            if (nickname.equals(securityService.getAuthenticatedUser())) {
+                Optional<Record> r1 = recordRepository.findById(id);
+                Record record1 = r1.get();
+                record1.setStatus("Uploading");
+                recordRepository.save(record1);
+                minioService.uploadFile(nickname, record.getFilename(), record.getFilename(), id);
+                this.updateRecord(id, record.getFilename());
+
+                return new ResponseEntity(record, HttpStatus.ACCEPTED);
+            }
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }else{
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<Record> updateRecord(int id, String objectName) {
@@ -95,10 +112,11 @@ public class RecordService {
         Record record = r.get();
         Map<String,String> fileInfo;
 
-        fileInfo = storageService.getFileInfo(record.getAuthor().getNickname(),objectName);
+        fileInfo = minioService.getFileInfo(record.getAuthor().getNickname(),objectName);
+        System.out.println("NOME RECORDOPOOOOKLEç"+fileInfo);
         record.setBucketName(fileInfo.get((String)"Bucket Name"));
         record.setObjectName(fileInfo.get((String)"Object Name"));
-        recordRepository.save(record);
+
         return new ResponseEntity<>(record,HttpStatus.ACCEPTED);
     }
 
@@ -115,7 +133,7 @@ public class RecordService {
         //check if the user is the owner of the record
         if(record.getAuthor().getId()==user.getId()){
             System.out.println("Lo user è il proprietario!!!!");
-            url=storageService.getUrl(record.getBucketName(),record.getObjectName());
+            url= minioService.getUrl(record.getBucketName(),record.getObjectName());
             return new ResponseEntity<>(url,HttpStatus.MOVED_PERMANENTLY);
         }
         return new ResponseEntity<>("NOT FOUND",HttpStatus.NOT_FOUND);

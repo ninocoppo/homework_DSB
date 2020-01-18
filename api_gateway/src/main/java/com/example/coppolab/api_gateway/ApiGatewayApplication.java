@@ -48,21 +48,21 @@ public class ApiGatewayApplication {
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
-                        .route(p -> p.path("/getfile/**").and().method(HttpMethod.GET)
-                                .filters(f -> f.rewritePath("/getfile/(?<segment>.*)", "/record/showRecord/${segment}")
+                        .route(p -> p.path("/**").and().method(HttpMethod.GET)
+                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/showRecord/${segment}")
                                         .filter(httpRequestInfo)
                                         .modifyResponseBody(String.class,String.class,(exchange, s)-> Mono.just(s.toUpperCase())))
 
                                 .uri(uriConfiguration.getUrl()))
 
-                        .route(p -> p.path("/getfiles/**").and().method(HttpMethod.GET)
-                                .filters(f -> f.rewritePath("/getfiles", "/minio/files")
+                        .route(p -> p.path("/").and().method(HttpMethod.GET)
+                                .filters(f -> f.rewritePath("/", "/minio/files")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
-                        .route(p -> p.path("/postrecord/**").and().method(HttpMethod.POST)
+                        .route(p -> p.path("/").and().method(HttpMethod.POST)
                                 .and().readBody(String.class, requestBody -> {return true;})
-                                .filters(f -> f.rewritePath("/postrecord", "/record/put")
+                                .filters(f -> f.rewritePath("/", "/record/put")
                                         .filter(httpRequestInfo)
                                         .filter(payloadFilter)
 
@@ -70,13 +70,13 @@ public class ApiGatewayApplication {
 
                                 .uri(uriConfiguration.getUrl()))
 
-                        .route(p -> p.path("/postminio/**").and().method(HttpMethod.POST)
-                                .filters(f -> f.rewritePath("/postminio/(?<segment>.*)", "/record/check/${segment}")
+                        .route(p -> p.path("/**").and().method(HttpMethod.POST)
+                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/check/${segment}")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
-                        .route(p -> p.path("/delete/**").and().method(HttpMethod.DELETE)
-                                .filters(f -> f.rewritePath("/delete/(?<segment>.*)", "/minio/deleteByUserRole/${segment}")
+                        .route(p -> p.path("/**").and().method(HttpMethod.DELETE)
+                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/minio/deleteByUserRole/${segment}")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
                         .build();

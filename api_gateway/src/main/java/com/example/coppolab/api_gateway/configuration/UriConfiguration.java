@@ -30,4 +30,5 @@ public class UriConfiguration {
         this.url = url;
     }
 
+
 }

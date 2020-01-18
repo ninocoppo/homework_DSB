@@ -33,7 +33,7 @@ public class MinioController {
     @PostMapping(path = "/upload")
     public ResponseEntity uploadFile(@RequestBody MinioFile minioFile){
 
-        return minioService.uploadFile(minioFile.getBucketName(), minioFile.getObjectName(), minioFile.getFilename());
+        return minioService.uploadFile(minioFile.getBucketName(), minioFile.getObjectName(), minioFile.getFilename(),minioFile.getRecordId());
 
     }
 

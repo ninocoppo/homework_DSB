@@ -43,17 +43,23 @@ spec:
         image: myapp
         imagePullPolicy: Never
         name: myapp
+
         workingDir: /myapp/storage/homework_DSB/files/
+
         ports:
         - containerPort: 8081
         resources: {}
         volumeMounts:
+
         - mountPath: /myapp/storage
           name: application-claim0
+
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
       - name: application-claim0
         persistentVolumeClaim:
+
           claimName: myapp-pvc
+
 status: {}

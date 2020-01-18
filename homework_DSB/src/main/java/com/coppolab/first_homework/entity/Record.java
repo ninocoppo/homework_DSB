@@ -16,6 +16,10 @@ public class Record {
     //File name in the bucket
     private String objectName;
 
+
+    private String status;
+
+
     @ManyToOne
     private User author;
 
@@ -54,6 +58,14 @@ public class Record {
 
     public String getObjectName() {
         return objectName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void setObjectName(String objectName) {

@@ -1,5 +1,7 @@
 apiVersion: apps/v1
+
 kind: StatefulSet
+
 metadata:
   annotations:
     kompose.cmd: kompose convert
@@ -9,11 +11,15 @@ metadata:
     io.kompose.service: minio
   name: minio
 spec:
+
   serviceName: "minio"
+
   replicas: 3
   selector:
     matchLabels:
       io.kompose.service: minio
+
+
   template:
     metadata:
       annotations:
@@ -22,7 +28,9 @@ spec:
       creationTimestamp: null
       labels:
         io.kompose.service: minio
+
         app: minio
+
     spec:
       containers:
       - args:
@@ -49,5 +57,7 @@ spec:
       - name: minio-claim0
         persistentVolumeClaim:
           claimName: minio-claim0
+
 status:
   replicas: 3
+

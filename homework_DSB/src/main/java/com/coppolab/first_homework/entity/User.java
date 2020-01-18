@@ -1,5 +1,9 @@
 package com.coppolab.first_homework.entity;
 
+
+import org.checkerframework.common.aliasing.qual.Unique;
+
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -12,6 +16,7 @@ public class User {
     private int id;
 
     @NotNull
+    @Unique
     private String nickname;
 
     @NotNull

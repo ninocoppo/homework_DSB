@@ -14,7 +14,7 @@ import java.util.Map;
 @Configuration
 public class SpoutConfiguration {
 
-    private static final String KAFKA_BROKER = "localhost:9092";
+    private static final String KAFKA_BROKER = "kafka:9092";
 
     @Bean
     public ProducerFactory<String,String> producerFactory(){

@@ -26,17 +26,18 @@ public class PayloadFilter implements GatewayFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
 
+
         String body = exchange.getAttribute("cachedRequestBodyObject");
 
 
-        HashMap<String,Object> result =
-                null;
+        HashMap<String,Object> result = null;
         try {
             result = new ObjectMapper().readValue(body, HashMap.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         String filename = (String)result.get("filename");
+
 
         File file = new File("../homework_DSB/files/"+filename);
         if(!file.exists()){
@@ -46,11 +47,16 @@ public class PayloadFilter implements GatewayFilter, Ordered {
         long file_length = file.length();
         if(file_length > MAX_FILE_SIZE){
             throw new RuntimeException("File too large, maximum file size: "+this.MAX_FILE_SIZE+"B");
+
         }
 
 
         return chain.filter(exchange);
     }
+
+
+
+
 
     @Override
     public int getOrder() {

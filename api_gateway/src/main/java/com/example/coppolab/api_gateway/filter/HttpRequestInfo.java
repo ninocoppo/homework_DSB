@@ -22,13 +22,19 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
     UriConfiguration uriConfiguration = new UriConfiguration();
 
 
+    PayloadFilter payloadFilter = new PayloadFilter();
+
+
+
+
     String url = uriConfiguration.getUrl();
     String method = "";
     String path = "";
     String uri = "";
     String status_code="";
     String req_outcome="";
-    String request_response_time="";
+
+
 
 
     @Override
@@ -60,6 +66,9 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
                     "http.method",this.method,
                     "response", status_code,
                     "outcome",req_outcome));
+
+
+
         }));
     }
 

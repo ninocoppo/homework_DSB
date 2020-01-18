@@ -9,6 +9,7 @@ metadata:
     io.kompose.service: api-gateway
   name: api-gateway
 spec:
+
   type: LoadBalancer
   ports:
   - name: "8080"
@@ -17,5 +18,6 @@ spec:
     #nodePort: 8080
   selector:
     io.kompose.service: api-gateway
+
 status:
   loadBalancer: {}

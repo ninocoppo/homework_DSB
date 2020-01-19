@@ -11,7 +11,7 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import reactor.core.publisher.Mono;
+
 
 @SpringBootApplication
 @EnableConfigurationProperties(UriConfiguration.class)
@@ -42,27 +42,33 @@ public class ApiGatewayApplication {
                                 .uri(uriConfiguration.getUrl()))
 
 
+                        // Register a user with POST command
                         .route(p -> p.path("/register/**")
 
                                 .filters(f -> f.rewritePath("/register", "/user/register")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
+
+                        // Return the file that correspond to the id_record
                         .route(p -> p.path("/**").and().method(HttpMethod.GET)
                                 .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/showRecord/${segment}")
-                                        .filter(httpRequestInfo)
-                                        .modifyResponseBody(String.class,String.class,(exchange, s)-> Mono.just(s.toUpperCase())))
-
+                                        .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
+                        // Return a list of files of authenticated user
+
 
                         .route(p -> p.path("/").and().method(HttpMethod.GET)
                                 .filters(f -> f.rewritePath("/", "/minio/files")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
+                        // Insert new record
                         .route(p -> p.path("/").and().method(HttpMethod.POST)
                                 .and().readBody(String.class, requestBody -> {return true;})
                                 .filters(f -> f.rewritePath("/", "/record/put")
+
+
                                         .filter(httpRequestInfo)
                                         .filter(payloadFilter)
 
@@ -70,10 +76,14 @@ public class ApiGatewayApplication {
 
                                 .uri(uriConfiguration.getUrl()))
 
+                        // Upload file in minio
+
                         .route(p -> p.path("/**").and().method(HttpMethod.POST)
                                 .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/check/${segment}")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
+
+                        // Delete a file
 
                         .route(p -> p.path("/**").and().method(HttpMethod.DELETE)
                                 .filters(f -> f.rewritePath("/(?<segment>.*)", "/minio/deleteByUserRole/${segment}")

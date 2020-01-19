@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+  name: spout
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spout
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: spout
+    spec:
+      containers:
+      - env:
+        - name: URL
+          value: http://prometheus:9090
+        - name: PORT
+          value: "8082"
+        - name: KAFKA_BROKER_URL
+          value: "192.168.99.104:30679"
+        image: spout
+        imagePullPolicy: Never
+        name: spout
+        workingDir: /spout
+        
+        ports:
+        - containerPort: 8082
+        resources: {}
+        volumeMounts:
+        - mountPath: /spout
+          name: spout-pvc
+
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: spout-pvc
+        persistentVolumeClaim:
+
+          claimName: spout-pvc
+
+status: {}

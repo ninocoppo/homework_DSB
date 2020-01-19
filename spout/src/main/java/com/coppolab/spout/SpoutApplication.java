@@ -13,24 +13,16 @@ import java.util.concurrent.TimeUnit;
 
 public class SpoutApplication {
 
-
+    @Autowired
     static KafkaProducerMetrics kafkaProducerMetrics;
-
-    @PostConstruct
-    private static void setTemplate(){
-        kafkaProducerMetrics = new KafkaProducerMetrics();
-
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(SpoutApplication.class, args);
 
 
-        setTemplate();
 
 
         while(true) {
-
             try {
                 kafkaProducerMetrics.sendMessage();
                 TimeUnit.SECONDS.sleep(10);

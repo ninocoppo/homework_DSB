@@ -38,7 +38,9 @@ public class MinioService {
 
     private String url;
 
+
     private List<MinioClient> minioClient = new ArrayList<>();
+
 
     @Autowired
     private SecurityService securityService;
@@ -55,6 +57,13 @@ public class MinioService {
 
         minioDiscoveryService = new MinioDiscoveryService();
 
+        InetAddress[] inetUrlVector = this.minioDiscoveryService.resolve("minio-service");
+
+        String urlMinioService=inetUrlVector[0].getHostAddress();
+
+
+
+
 
         this.minioConfig = new MinioConfig();
         this.secretkey = this.minioConfig.getSecret_key();
@@ -65,6 +74,9 @@ public class MinioService {
         System.out.println(this.url);
 
 
+        //urlMinioClient = new MinioClient(urlMinioService,9000,accesskey,secretkey,false);
+
+
         InetAddress[] ipAddress = this.minioDiscoveryService.resolve("minio-headless-service");
         int length= ipAddress.length;
 
@@ -73,13 +85,14 @@ public class MinioService {
             System.out.println("Created connection with minio service with IP: "+ipAddress[i].getHostAddress());
         }
 
+
     }
 
     public void createBucket(User user) {
         try {
 
             for(int i=0; i<minioClient.size();i++) {
-                this.minioClient.get(i).makeBucket(user.getNickname());
+              this.minioClient.get(i).makeBucket(user.getNickname());
             }
         } catch (InvalidBucketNameException | RegionConflictException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException e) {
 
@@ -98,10 +111,9 @@ public class MinioService {
             for(int i = 0; i < minioClient.size(); i++) {
 
                 //filename = path of the container storage + filename
-
                 this.minioClient.get(i).putObject(bucketName, objectName, fileName);
-
             }
+
             record.setStatus("Available");
 
             recordRepository.save(record);
@@ -125,6 +137,12 @@ public class MinioService {
         try {
 
             return this.minioClient.get(0).presignedGetObject(bucketName, objectName);
+            /*System.out.println("Original URL: "+originalUrl);
+            System.out.println("Modified URL: "+this.urlMinioClient.presignedGetObject(bucketName,objectName));
+            return this.urlMinioClient.presignedGetObject(bucketName,objectName);
+            */
+
+
 
 
         }catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
@@ -174,7 +192,7 @@ public class MinioService {
         try {
 
             for(int i = 0; i < minioClient.size(); i++) {
-                Iterable<Result<Item>> infos = this.minioClient.get(i).listObjects(nickname);
+                Iterable<Result<Item>> infos = this.minioClient.get(0).listObjects(nickname);
                 //Fill user's file list
                 for (Result<Item> info : infos) {
                     files.add(info.get().objectName());
@@ -275,7 +293,7 @@ public class MinioService {
             try {
 
                 for(int i = 0; i < minioClient.size(); i++) {
-                    this.minioClient.get(i).removeObject(bucketName, objectName);
+                   this.minioClient.get(i).removeObject(bucketName, objectName);
                  }
                 recordRepository.deleteById(id);
                 return new ResponseEntity<>("OK", HttpStatus.OK);

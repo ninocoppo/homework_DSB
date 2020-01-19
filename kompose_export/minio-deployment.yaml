@@ -4,14 +4,9 @@ kind: StatefulSet
 
 metadata:
   annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.20.0 (HEAD)
-  creationTimestamp: null
   labels:
-    io.kompose.service: minio
   name: minio
 spec:
-
   serviceName: "minio"
 
   replicas: 3

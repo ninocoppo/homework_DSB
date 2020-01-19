@@ -40,7 +40,7 @@ public class MinioService {
 
     private List<MinioClient> minioClient = new ArrayList<>();
 
-    private MinioClient urlMinioClient;
+    //private MinioClient urlMinioClient;
 
     @Autowired
     private SecurityService securityService;
@@ -51,15 +51,16 @@ public class MinioService {
 
 
 
-    MinioDiscoveryService minioDiscoveryService;
+    MinioDiscoveryService minioDiscoveryService,minioDiscoveryService1;
 
     public MinioService() throws InvalidPortException, InvalidEndpointException {
 
         minioDiscoveryService = new MinioDiscoveryService();
+        //minioDiscoveryService1 = new MinioDiscoveryService();
 
-        InetAddress[] inetUrlVector = this.minioDiscoveryService.resolve("minio-service");
+        //InetAddress[] inetUrlVector = this.minioDiscoveryService1.resolve("minio-service");
 
-        String urlMinioService=inetUrlVector[0].getHostAddress();
+        //String urlMinioService=inetUrlVector[0].getHostAddress();
 
 
 
@@ -73,7 +74,7 @@ public class MinioService {
         System.out.println(this.secretkey);
         System.out.println(this.url);
 
-        urlMinioClient = new MinioClient(urlMinioService,9000,accesskey,secretkey,false);
+
 
 
         InetAddress[] ipAddress = this.minioDiscoveryService.resolve("minio-headless-service");
@@ -83,14 +84,15 @@ public class MinioService {
             this.minioClient.add(new MinioClient(ipAddress[i].getHostAddress(),9000, accesskey, secretkey, false));
             System.out.println("Created connection with minio service with IP: "+ipAddress[i].getHostAddress());
         }
-
+        //urlMinioClient = new MinioClient(urlMinioService,9000,accesskey,secretkey,false);
     }
 
     public void createBucket(User user) {
         try {
 
             for(int i=0; i<minioClient.size();i++) {
-                this.minioClient.get(i).makeBucket(user.getNickname());
+               this.minioClient.get(i).makeBucket(user.getNickname());
+            //      this.urlMinioClient.makeBucket(user.getNickname());
             }
         } catch (InvalidBucketNameException | RegionConflictException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException e) {
 
@@ -108,9 +110,10 @@ public class MinioService {
 
             for(int i = 0; i < minioClient.size(); i++) {
 
-                //filename = path of the container storage + filename
+              //filename = path of the container storage + filename
 
-                this.minioClient.get(i).putObject(bucketName, objectName, fileName);
+              this.minioClient.get(i).putObject(bucketName, objectName, fileName);
+              //  this.urlMinioClient.putObject(bucketName,objectName,fileName);
 
             }
             record.setStatus("Available");
@@ -134,11 +137,11 @@ public class MinioService {
     public String getUrl(String bucketName,String objectName){
 
         try {
-
-            String originalUrl=this.minioClient.get(0).presignedGetObject(bucketName, objectName);
-            System.out.println("Original URL: "+originalUrl);
-            System.out.println("Modified URL: "+this.urlMinioClient.presignedGetObject(bucketName,objectName));
-            return this.urlMinioClient.presignedGetObject(bucketName,objectName);
+            //System.out.println("Modified URL: "+this.urlMinioClient.presignedGetObject(bucketName,objectName));
+            return this.minioClient.get(0).presignedGetObject(bucketName, objectName);
+            //return this.urlMinioClient.presignedGetObject(bucketName,objectName);
+            // System.out.println("Modified URL: "+this.urlMinioClient.presignedGetObject(bucketName,objectName));
+            //return this.urlMinioClient.presignedGetObject(bucketName,objectName);
 
 
         }catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
@@ -254,7 +257,6 @@ public class MinioService {
     }
 
     //DELETE IN ADMIN MODE
-
     public ResponseEntity<String> deleteAsAdmin(int id){
         Optional<Record> r = recordRepository.findById(id);
         Record record = r.get();

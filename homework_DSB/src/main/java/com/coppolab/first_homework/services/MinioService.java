@@ -113,7 +113,7 @@ public class MinioService {
               //filename = path of the container storage + filename
 
               this.minioClient.get(i).putObject(bucketName, objectName, fileName);
-              //  this.urlMinioClient.putObject(bucketName,objectName,fileName);
+              //this.urlMinioClient.putObject(bucketName,objectName,fileName);
 
             }
             record.setStatus("Available");

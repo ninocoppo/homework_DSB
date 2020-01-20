@@ -113,7 +113,7 @@ public class RecordService {
         Map<String,String> fileInfo;
 
         fileInfo = minioService.getFileInfo(record.getAuthor().getNickname(),objectName);
-        System.out.println("NOME RECORDOPOOOOKLEç"+fileInfo);
+
         record.setBucketName(fileInfo.get((String)"Bucket Name"));
         record.setObjectName(fileInfo.get((String)"Object Name"));
 

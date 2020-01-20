@@ -22,26 +22,18 @@ import java.net.URL;
 @Component
 public class HttpConnectionConfig {
 
-    @Autowired
-    private Environment env;
+    @Value("${prometheus.url}")
+    private String prom_url;
 
-    private String prometheus_url = env.getProperty("${prometheus.url}");
-
-
-
-    /*
-    public String doRequest(String url){
+    public String doRequest(){
 
         RestTemplate restTemplate = new RestTemplate();
-        String fooResourceUrl = url;
+        String fooResourceUrl = this.prom_url+"/api/v1/query?query=http_request_timer_seconds_max";
         ResponseEntity<String> response
                 = restTemplate.getForEntity(fooResourceUrl + "/1", String.class);
 
         return response.toString();
 
-    }*/
-
-    public String getPrometheus_url() {
-        return prometheus_url;
     }
+
 }

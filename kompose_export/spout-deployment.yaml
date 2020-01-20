@@ -18,11 +18,11 @@ spec:
       containers:
       - env:
         - name: URL
-          value: http://prometheus:9090
+          value: http://192.168.99.104:30710
         - name: PORT
           value: "8082"
         - name: KAFKA_BROKER_URL
-          value: "192.168.99.104:30679"
+          value: "INSIDE://:9092,OUTSIDE://kafka-service:30322"
         image: spout
         imagePullPolicy: Never
         name: spout

@@ -1,37 +1,62 @@
 package com.coppolab.spout.configuration;
 
+import com.coppolab.spout.KafkaProducerMetrics;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 public class SpoutConfiguration {
 
-    private static final String KAFKA_BROKER = "localhost:9092";
+    @Value("${kafka.broker.url}")
+    private String kafka_broker_url;
 
     @Bean
-    public ProducerFactory<String,String> producerFactory(){
-        return new DefaultKafkaProducerFactory<>(producerConfigurations());
+    public Map<String, Object> producerConfigs() {
+        Map<String, Object> props = new HashMap<>();
+        // list of host:port pairs used for establishing the initial connections to the Kakfa cluster
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                kafka_broker_url);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                StringSerializer.class);
+
+        return props;
     }
 
     @Bean
-    public Map<String,Object> producerConfigurations() {
-        Map<String, Object> configurations = new HashMap<>();
-        configurations.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_BROKER);
-        configurations.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configurations.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        return configurations;
+    public ProducerFactory<String, String> producerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
+
+    //Put in the IoC container an instance of the Kafka message producer
+    @Bean
+    public KafkaProducerMetrics kafkaProducer() {
+        return new KafkaProducerMetrics();
+    }
+
 }

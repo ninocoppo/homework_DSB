@@ -15,8 +15,6 @@ spec:
     port: 9000
     targetPort: 9000
   selector:
-    io.kompose.service: minio
-
     app: minio
 
 status:

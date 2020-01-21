@@ -51,15 +51,11 @@ public class MinioService {
     RecordRepository recordRepository;
 
 
-
-    MinioDiscoveryService minioDiscoveryService,minioDiscoveryService1;
+    MinioDiscoveryService minioDiscoveryService;
 
     public MinioService() throws InvalidPortException, InvalidEndpointException {
 
         minioDiscoveryService = new MinioDiscoveryService();
-
-
-
 
 
         this.minioConfig = new MinioConfig();
@@ -86,6 +82,8 @@ public class MinioService {
 
     public void createBucket(User user) {
         try {
+
+
 
             for(int i=0; i<minioClient.size();i++) {
 
@@ -120,6 +118,7 @@ public class MinioService {
 
 
             return new ResponseEntity(HttpStatus.OK);
+
         } catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
             record.setStatus("UploadFailed");
             //DELETE FILE FROM ALL REPLICAS
@@ -187,14 +186,14 @@ public class MinioService {
 
         try {
 
-            for(int i = 0; i < minioClient.size(); i++) {
+
                 Iterable<Result<Item>> infos = this.minioClient.get(0).listObjects(nickname);
                 //Fill user's file list
                 for (Result<Item> info : infos) {
                     files.add(info.get().objectName());
                 }
 
-            }
+
 
             return new Gson().toJson(files);
 

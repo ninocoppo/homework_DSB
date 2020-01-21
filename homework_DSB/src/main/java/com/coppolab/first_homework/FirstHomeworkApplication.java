@@ -17,13 +17,13 @@ public class FirstHomeworkApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FirstHomeworkApplication.class, args);
-        try {
+        /*try {
             minioService = new MinioService();
         } catch (InvalidPortException e) {
             e.printStackTrace();
         } catch (InvalidEndpointException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
 

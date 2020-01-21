@@ -1,6 +1,5 @@
-com/example/coppolab/api_gateway/filter/GetBody.class
-com/example/coppolab/api_gateway/configuration/UriConfiguration.class
 com/example/coppolab/api_gateway/context/Metrics.class
 com/example/coppolab/api_gateway/filter/HttpRequestInfo.class
 com/example/coppolab/api_gateway/filter/PayloadFilter.class
+com/example/coppolab/api_gateway/configuration/UriConfiguration.class
 com/example/coppolab/api_gateway/ApiGatewayApplication.class

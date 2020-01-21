@@ -49,12 +49,6 @@ public class ApiGatewayApplication {
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
-
-                        // Return the file that correspond to the id_record
-                        .route(p -> p.path("/**").and().method(HttpMethod.GET)
-                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/showRecord/${segment}")
-                                        .filter(httpRequestInfo))
-                                .uri(uriConfiguration.getUrl()))
                         // Return a list of files of authenticated user
 
 
@@ -62,6 +56,14 @@ public class ApiGatewayApplication {
                                 .filters(f -> f.rewritePath("/", "/minio/files")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
+
+
+                        // Return the file that correspond to the id_record
+                        .route(p -> p.path("/**").and().method(HttpMethod.GET)
+                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/showRecord/${segment}")
+                                        .filter(httpRequestInfo))
+                                .uri(uriConfiguration.getUrl()))
+
 
                         // Insert new record
                         .route(p -> p.path("/").and().method(HttpMethod.POST)

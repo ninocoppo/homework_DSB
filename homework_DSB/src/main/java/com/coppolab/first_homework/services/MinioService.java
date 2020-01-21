@@ -30,7 +30,6 @@ public class MinioService {
 
 
 
-    MinioConfig minioConfig;
 
     private String accesskey;
 
@@ -51,33 +50,17 @@ public class MinioService {
 
 
 
-    MinioDiscoveryService minioDiscoveryService;
+    MinioDiscoveryService minioDiscoveryService = new MinioDiscoveryService();
 
-    public MinioService() throws InvalidPortException, InvalidEndpointException {
+    InetAddress[] ipAddress = this.minioDiscoveryService.resolve("minio-headless-service");
 
-        minioDiscoveryService = new MinioDiscoveryService();
+    @Autowired
+    public MinioService(MinioConfig minioConfig) throws InvalidPortException, InvalidEndpointException {
 
-        InetAddress[] inetUrlVector = this.minioDiscoveryService.resolve("minio-service");
+        this.accesskey = minioConfig.getAccess_key();
+        this.secretkey = minioConfig.getSecret_key();
+        this.url = minioConfig.getUrl();
 
-        String urlMinioService=inetUrlVector[0].getHostAddress();
-
-
-
-
-
-        this.minioConfig = new MinioConfig();
-        this.secretkey = this.minioConfig.getSecret_key();
-        this.accesskey = this.minioConfig.getAccess_key();
-        this.url = this.minioConfig.getUrl();
-        System.out.println(this.minioConfig.getAccess_key());
-        System.out.println(this.secretkey);
-        System.out.println(this.url);
-
-
-        //urlMinioClient = new MinioClient(urlMinioService,9000,accesskey,secretkey,false);
-
-
-        InetAddress[] ipAddress = this.minioDiscoveryService.resolve("minio-headless-service");
         int length= ipAddress.length;
 
         for(int i = 0; i < ipAddress.length; i++){
@@ -117,9 +100,8 @@ public class MinioService {
             record.setStatus("Available");
 
             recordRepository.save(record);
-
-
             return new ResponseEntity(HttpStatus.OK);
+
         } catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
             record.setStatus("UploadFailed");
             //DELETE FILE FROM ALL REPLICAS
@@ -128,6 +110,7 @@ public class MinioService {
             e.printStackTrace();
 
         }
+        System.out.println("File not uploaded");
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
     }

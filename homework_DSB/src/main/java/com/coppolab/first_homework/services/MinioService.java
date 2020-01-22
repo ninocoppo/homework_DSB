@@ -30,7 +30,6 @@ public class MinioService {
 
 
 
-    MinioConfig minioConfig;
 
     private String accesskey;
 
@@ -51,26 +50,21 @@ public class MinioService {
     RecordRepository recordRepository;
 
 
-    MinioDiscoveryService minioDiscoveryService;
 
-    public MinioService() throws InvalidPortException, InvalidEndpointException {
-
-        minioDiscoveryService = new MinioDiscoveryService();
+    MinioDiscoveryService minioDiscoveryService = new MinioDiscoveryService();
 
 
-        this.minioConfig = new MinioConfig();
-        this.secretkey = this.minioConfig.getSecret_key();
-        this.accesskey = this.minioConfig.getAccess_key();
-        this.url = this.minioConfig.getUrl();
-        System.out.println(this.minioConfig.getAccess_key());
-        System.out.println(this.secretkey);
-        System.out.println(this.url);
+    InetAddress[] ipAddress = this.minioDiscoveryService.resolve("minio-headless-service");
 
 
+    @Autowired
+    public MinioService(MinioConfig minioConfig) throws InvalidPortException, InvalidEndpointException {
 
 
+        this.accesskey = minioConfig.getAccess_key();
+        this.secretkey = minioConfig.getSecret_key();
+        this.url = minioConfig.getUrl();
 
-        InetAddress[] ipAddress = this.minioDiscoveryService.resolve("minio-headless-service");
         int length= ipAddress.length;
 
         for(int i = 0; i < ipAddress.length; i++){
@@ -115,8 +109,6 @@ public class MinioService {
             record.setStatus("Available");
 
             recordRepository.save(record);
-
-
             return new ResponseEntity(HttpStatus.OK);
 
         } catch (MinioException | NoSuchAlgorithmException | IOException | InvalidKeyException | XmlPullParserException e) {
@@ -127,6 +119,7 @@ public class MinioService {
             e.printStackTrace();
 
         }
+        System.out.println("File not uploaded");
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
     }

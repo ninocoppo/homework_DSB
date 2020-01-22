@@ -9,22 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties(MinioConfig.class)
 public class FirstHomeworkApplication {
 
-    static MinioService minioService;
 
 
     public static void main(String[] args) {
         SpringApplication.run(FirstHomeworkApplication.class, args);
-        /*try {
-            minioService = new MinioService();
-        } catch (InvalidPortException e) {
-            e.printStackTrace();
-        } catch (InvalidEndpointException e) {
-            e.printStackTrace();
-        }*/
-
 
 
     }

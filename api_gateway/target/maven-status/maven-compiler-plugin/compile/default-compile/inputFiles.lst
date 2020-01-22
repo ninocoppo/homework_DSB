@@ -1,5 +1,4 @@
 /home/nino/Scrivania/homework_DSB-kubernetes/api_gateway/src/main/java/com/example/coppolab/api_gateway/filter/HttpRequestInfo.java
-/home/nino/Scrivania/homework_DSB-kubernetes/api_gateway/src/main/java/com/example/coppolab/api_gateway/filter/GetBody.java
 /home/nino/Scrivania/homework_DSB-kubernetes/api_gateway/src/main/java/com/example/coppolab/api_gateway/filter/PayloadFilter.java
 /home/nino/Scrivania/homework_DSB-kubernetes/api_gateway/src/main/java/com/example/coppolab/api_gateway/configuration/UriConfiguration.java
 /home/nino/Scrivania/homework_DSB-kubernetes/api_gateway/src/main/java/com/example/coppolab/api_gateway/context/Metrics.java

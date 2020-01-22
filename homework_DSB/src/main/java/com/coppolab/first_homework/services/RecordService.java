@@ -117,8 +117,7 @@ public class RecordService {
 
         record.setBucketName(fileInfo.get((String)"Bucket Name"));
         record.setObjectName(fileInfo.get((String)"Object Name"));
-        System.out.println("Bucket name==========="+record.getBucketName());
-        System.out.println("ID DEL RECORD====="+record.getRecordId());
+
         recordRepository.save(record);
         return new ResponseEntity<>(record,HttpStatus.ACCEPTED);
     }

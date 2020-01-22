@@ -16,7 +16,7 @@ public class User {
     private int id;
 
     @NotNull
-    @Unique
+    @Column(unique = true)
     private String nickname;
 
     @NotNull

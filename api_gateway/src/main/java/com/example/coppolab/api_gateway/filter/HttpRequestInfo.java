@@ -11,6 +11,8 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 @Component
 public class HttpRequestInfo implements GatewayFilter, Ordered {
@@ -33,8 +35,7 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
     String uri = "";
     String status_code="";
     String req_outcome="";
-
-
+    String time = "";
 
 
     @Override
@@ -58,6 +59,10 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
             this.status_code = response.getStatusCode().toString();
             this.req_outcome = response.getStatusCode().getReasonPhrase();
 
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime localTime = LocalDateTime.now();
+            this.time = dtf.format(localTime);
+
 
             this.metrics.getRegistry().config().commonTags();
             //Stop the timer and add the timer to the registry
@@ -65,7 +70,8 @@ public class HttpRequestInfo implements GatewayFilter, Ordered {
                     "Routed.uri",this.uri,
                     "http.method",this.method,
                     "response", status_code,
-                    "outcome",req_outcome));
+                    "outcome",req_outcome,
+                    "time", this.time));
 
 
 

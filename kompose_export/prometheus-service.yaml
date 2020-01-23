@@ -1,21 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.20.0 (HEAD)
-  creationTimestamp: null
+  name: prometheus-service
   labels:
-    io.kompose.service: prometheus
-  name: prometheus
+    app: prometheus
 spec:
-  type: LoadBalancer
+  type: NodePort
 
   ports:
-  - name: "9090"
+  - name: "innerport"
     port: 9090
     targetPort: 9090
+  - name: "outport"
+    port: 9999
+    nodePort: 30001
   selector:
-    io.kompose.service: prometheus
+    app: prometheus
 status:
   loadBalancer: {}

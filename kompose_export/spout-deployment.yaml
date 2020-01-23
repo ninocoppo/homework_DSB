@@ -18,7 +18,7 @@ spec:
       containers:
       - env:
         - name: URL
-          value: http://192.168.99.104:30710
+          value: "http://prometheus-service:9090"
         - name: PORT
           value: "8082"
         - name: KAFKA_BROKER_URL

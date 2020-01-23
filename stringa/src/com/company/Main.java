@@ -44,13 +44,13 @@ public class Main {
 
 
 
-        //System.out.println(finalString);
-        /*
-        Gson g = new Gson();
-        String stringInJson = g.toJson(finalString);
-        System.out.println(stringInJson);
-        //System.out.println(str.replace("\\",""));
+        System.out.println("FORMATO JSON\n\n");
 
-         */
+        Gson g = new Gson();
+        String stringInJson = g.toJson(tmp).replace("\\","");
+        System.out.println(stringInJson);
+        
+
+
     }
 }

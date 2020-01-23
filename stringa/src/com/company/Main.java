@@ -20,36 +20,42 @@ public class Main {
         //Trasforma la stringa in una stringa fromato json
         String first = splitted.substring(splitted.indexOf("{"));
         int index1 = first.indexOf(",[Cont");
-        String finalString = first.substring(0,index1).replace(",{","");
-
-
-
+        String finalString = first.substring(0, index1).replace(",{", "");
 
 
         //Splitta ogni singola richiesta http
-        String finale = finalString.substring(0,finalString.indexOf("]}}"));
-        String tmp[] = finale.split("\"metric\"+:");
+        String finale = finalString.substring(0, finalString.indexOf("]}}"));
+        String tmp1[] = finale.split(":\\[" + "\\{"); //Fa lo split di ":[{"
+        String tmp[] = tmp1[1].split("\"metric\"+:");
 
 
-        String metrics[] = tmp;
-        for(int i = 0; i < tmp.length-1; i++){
-
-            metrics[i] = metrics[i+1];
+        int counter = 0;
+        while (counter < tmp.length) {
+            System.out.println(tmp[counter]);
+            counter++;
         }
-        metrics[metrics.length-1] = "";
-        for(String m: metrics){
-            System.out.println(m);
+        System.out.println("Counter" + counter);
+        System.out.println("Vector size"+tmp.length);
+
+
+        if (tmp.length <= counter) {
+            System.out.println("Nothing new...");
+        } else{
+            System.out.println("New request");
         }
 
 
 
 
-        System.out.println("FORMATO JSON\n\n");
+
+
+        //System.out.println(finalString);
+        /*
 
         Gson g = new Gson();
         String stringInJson = g.toJson(tmp).replace("\\","");
         System.out.println(stringInJson);
-        
+        */
 
 
     }

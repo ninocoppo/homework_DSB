@@ -5,13 +5,19 @@ metadata:
   labels:
     app: prometheus
 spec:
-  type: ClusterIP
+
+  type: NodePort
+
 
   ports:
   - name: "innerport"
     port: 9090
     targetPort: 9090
-  
+
+  - name: "outport"
+    port: 9999
+    nodePort: 30001
+
   selector:
     app: prometheus
 status:

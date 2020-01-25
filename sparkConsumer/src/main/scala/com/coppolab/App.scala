@@ -1,27 +1,30 @@
-import java.util.regex.Matcher
+package com.coppolab
 
-import com.google.gson.Gson
+
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.kafka010.KafkaUtils
-import org.apache.spark.streaming.{Seconds, StreamingContext}
-import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
-import scala.util.parsing.json._
+import org.apache.spark.streaming.kafka010.KafkaUtils
+import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
+import org.apache.spark.streaming.{Seconds, StreamingContext}
 
-import scala.util.matching.Regex
-
-
+/**
+ * Hello world!
+ *
+ */
 object App {
-
   def main(args: Array[String]): Unit = {
     // Create context with 30 second batch interval
     val conf = new SparkConf().setAppName("spark-kafka").setMaster("local[2]").set("spark.executor.memory","1g");
     val ssc = new StreamingContext(conf, Seconds(30))
 
+    //Env variable from kubernetes deployment yaml
+    val URL = sys.env("URL");
+    println("URL :"+URL)
+
     /* Configure Kafka */
     val kafkaParams = Map[String, Object](
-      "bootstrap.servers" -> "localhost:9092",
+      "bootstrap.servers" -> URL,
       "key.deserializer" -> classOf[StringDeserializer],
       "value.deserializer" -> classOf[StringDeserializer],
       "group.id" -> "test_group",
@@ -36,7 +39,7 @@ object App {
       PreferConsistent, //Location strategy
       Subscribe[String, String](topics, kafkaParams)
     )
-
+  /*
     val lines = stream.map(_.value());
     val string = lines.flatMap(line => line.split(",")).toString
 
@@ -60,34 +63,31 @@ object App {
       .apply("result")
       .asInstanceOf[List[Map[String, Any]]]
       .apply(1)("metric")
-      //.asInstanceOf[Map[String, String]]
-      //.apply("http_method")
+    //.asInstanceOf[Map[String, String]]
+    //.apply("http_method")
 
     val time = parsed.asInstanceOf[Map[String,Any]]
-        .apply("data")
-        .asInstanceOf[Map[String,Any]]
-        .apply("result")
-        .asInstanceOf[List[Map[String,Any]]]
-        .apply(1)("value")
+      .apply("data")
+      .asInstanceOf[Map[String,Any]]
+      .apply("result")
+      .asInstanceOf[List[Map[String,Any]]]
+      .apply(1)("value")
 
     println("TIME: "+time)
 
 
 
     println("METRIC: "+metric)
-
+*/
 
 
     //string.saveAsTextFiles("./tmp/tmp");
 
     // Start the computation
-/*
-    ssc.start()
-    ssc.awaitTermination()
+    /*
+        ssc.start()
+        ssc.awaitTermination()
 
-*/
-
-
+    */
   }
-
 }

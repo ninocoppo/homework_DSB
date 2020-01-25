@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+  name: consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spout
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: spout
+    spec:
+      containers:
+      - env:
+        - name: URL
+          value: "http://kafka-service:9092"
+        - name: PORT
+          value: "8084"
+        
+        image: consumer
+        imagePullPolicy: Never
+        name: consumer
+        workingDir: /consumer
+        
+        ports:
+        - containerPort: 8084
+        resources: {}
+        volumeMounts:
+        - mountPath: /consumer
+          name: consumer-pvc
+
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: consumer-pvc
+        persistentVolumeClaim:
+
+          claimName: consumer-pvc
+
+status: {}

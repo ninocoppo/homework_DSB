@@ -1,15 +1,11 @@
-import java.util.regex.Matcher
-
-import com.google.gson.Gson
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.kafka010.KafkaUtils
-import org.apache.spark.streaming.{Seconds, StreamingContext}
-import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
-import scala.util.parsing.json._
+import org.apache.spark.streaming.kafka010.KafkaUtils
+import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
+import org.apache.spark.streaming.{Seconds, StreamingContext}
 
-import scala.util.matching.Regex
+import scala.util.parsing.json._
 
 
 object App {
@@ -18,10 +14,11 @@ object App {
     // Create context with 30 second batch interval
     val conf = new SparkConf().setAppName("spark-kafka").setMaster("local[2]").set("spark.executor.memory","1g");
     val ssc = new StreamingContext(conf, Seconds(30))
-
+    val url = sys.env("URL")
+    println("VARIABILE SETTATA:" +url)
     /* Configure Kafka */
     val kafkaParams = Map[String, Object](
-      "bootstrap.servers" -> "localhost:9092",
+      "bootstrap.servers" -> url,
       "key.deserializer" -> classOf[StringDeserializer],
       "value.deserializer" -> classOf[StringDeserializer],
       "group.id" -> "test_group",

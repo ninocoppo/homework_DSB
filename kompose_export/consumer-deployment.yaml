@@ -18,7 +18,8 @@ spec:
       containers:
       - env:
         - name: URL
-          value: "http://kafka-service:9092"
+          value: "INSIDE://:9092,OUTSIDE://kafka-service:30322"
+          #value: "http://kafka-service:9092"
         - name: PORT
           value: "8084"
         

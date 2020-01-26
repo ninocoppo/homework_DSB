@@ -32,16 +32,24 @@ object App {
       "enable.auto.commit" -> (false: java.lang.Boolean)
     )
 
-    val topics = Array("Metrics")
+    val topics = Array("metrics")
     //Create an input stream that directly pulls messages from Kafka Brokers without using any receiver
     val stream = KafkaUtils.createDirectStream[String, String](
       ssc,
       PreferConsistent, //Location strategy
       Subscribe[String, String](topics, kafkaParams)
     )
-  /*
+
+    stream.print();
+
     val lines = stream.map(_.value());
+
+    
+    /*
     val string = lines.flatMap(line => line.split(",")).toString
+
+
+
 
     val string1 = """{"status":"success","data":{"resultType":"vector","result":[{"metric":{"Routed_uri":"null/record/check/4","http_method":"POST","instance":"apigateway:8080","job":"api_gateway","outcome":"Accepted","response":"202 ACCEPTED"},"value":[1579100617.399,"0.450710869"]},{"metric":{"Routed_uri":"null/record/put","http_method":"POST","instance":"apigateway:8080","job":"api_gateway","outcome":"OK","response":"200 OK"},"value":[1579100617.399,"0.332547022"]},{"metric":{"Routed_uri":"null/record/put","http_method":"POST","instance":"apigateway:8080","job":"api_gateway","outcome":"Unauthorized","response":"401 UNAUTHORIZED"},"value":[1579100617.399,"0.526352693"]},{"metric":{"Routed_uri":"null/user/register","http_method":"POST","instance":"apigateway:8080","job":"api_gateway","outcome":"OK","response":"200 OK"},"value":[1579100617.399,"0"]}]}}"""
 
@@ -84,10 +92,10 @@ object App {
     //string.saveAsTextFiles("./tmp/tmp");
 
     // Start the computation
-    /*
+
         ssc.start()
         ssc.awaitTermination()
 
-    */
+
   }
 }

@@ -47,16 +47,14 @@ object App {
 
 
 
-
-    lines.foreachRDD(rdd=>println(rdd.collect().map(_.toString).mkString(",")))
-
     val lista = new ListBuffer[String]()
     lines.foreachRDD{ rdd => val allFlights = rdd.collect().map(_.toString).mkString(",")
       println("DENTRO IL CICLO"+allFlights) // prints to the stdout of the driver
+
       if (allFlights!="") {
         lista.append(allFlights)
       }
-      println("LISTA"+lista)
+
     }
 
     //val dio_benedetto = lines.foreachRDD (rdd =>  (rdd.collect.map(_.toString).mkString(",")))

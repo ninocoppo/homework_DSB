@@ -1,8 +1,3 @@
-Per fare funzionare correttamente l'applicazione eseguire i seguenti comandi
-#Avviare minikube ed assegnare 4 GB di RAM
-minikube start --memory 3000
-#Eseguire questo comando per fare eventuali rebuild delle immagini 
-eval $(minikube docker-env)
-#Montare la cartella storage su minikube
-minikube mount ./:/storage
 
+per avviare minikube utilizzare lo script minikube-start.sh nella directory principale
+per deployare i vari servizi su k8s utilizzare lo script deploy.sh nella directory kompose_export

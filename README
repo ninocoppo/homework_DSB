@@ -1,4 +1,7 @@
+****************************************************************
+IL PROGETTO COMPLETO SI TROVA NEL BRANCH TEST2 OPPURE NEL MASTER
+DI QUESTO REPOSITORY ---> https://github.com/Mbauro/homework_DSB
+****************************************************************
 
-Utilizzare gli script minikube_start.sh nella cartella principale e deploy.sh nella cartella kompose_export
-Nell'applicazione c'è un bug, non siamo riusciti a traformare il link che consente di fare il download da minio per 
-renderlo accessibile dall'esterno. 
+per avviare minikube utilizzare lo script minikube-start.sh nella directory principale
+per deployare i vari servizi su k8s utilizzare lo script deploy.sh nella directory kompose_export

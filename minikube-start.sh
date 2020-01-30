@@ -1,4 +1,4 @@
-minikube start --memory 3700 --vm-driver virtualbox
+minikube start --memory 4000
 eval $(minikube docker-env)
 minikube mount ./:/storage
 

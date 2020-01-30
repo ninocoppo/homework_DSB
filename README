@@ -1,8 +1,4 @@
-Per fare funzionare correttamente l'applicazione eseguire i seguenti comandi
-#Avviare minikube ed assegnare 4 GB di RAM
-minikube start --memory 3000
-#Eseguire questo comando per fare eventuali rebuild delle immagini 
-eval $(minikube docker-env)
-#Montare la cartella storage su minikube
-minikube mount ./:/storage
 
+Utilizzare gli script minikube_start.sh nella cartella principale e deploy.sh nella cartella kompose_export
+Nell'applicazione c'è un bug, non siamo riusciti a traformare il link che consente di fare il download da minio per 
+renderlo accessibile dall'esterno. 

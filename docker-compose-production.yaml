@@ -1,0 +1,121 @@
+version: '3'
+services:  
+    application:
+        container_name: myapp
+        image: mbauro/filemanagementservice
+        depends_on:
+            - mysql
+            - minio
+        links:
+            - mysql
+            - minio
+
+        environment:
+          - DB_URL=jdbc:mysql://mysql:3306/homework_db
+          - DB_USERNAME=mauro
+          - DB_PASSWORD=mauro
+          - ACCESS_KEY=mauro
+          - SECRET_KEY=maurolabruna
+          - MINIO_URL=http://minio:9000
+          #Change Tomcat default port. Passed it as env variable
+          #because Docker doesn't change it
+          - PORT=8081
+        ports:
+            - "8081:8081"
+        expose:
+            - "8081"
+            
+        restart: on-failure
+
+    mysql:
+        container_name: mysql
+        image: mysql
+        environment:
+            - MYSQL_ROOT_USER=root
+            - MYSQL_ROOT_PASSWORD=secret
+            - MYSQL_DATABASE=homework_db
+            - MYSQL_USER=mauro
+            - MYSQL_PASSWORD=mauro
+        ports:
+            - "3307:3306"
+            
+    minio:
+        container_name: minio
+        image: minio/minio
+        environment:
+            - MINIO_ACCESS_KEY=mauro
+            - MINIO_SECRET_KEY=maurolabruna
+        ports:
+            - "9000:9000"
+        expose:
+            - "9000"
+        command: minio server ./storage
+
+    api_gateway:
+
+        container_name: apigateway  #For prometheus
+
+        environment:
+            - URL=http://myapp:8081
+            - RESPONSE_TIMEOUT=2000
+            - MAX_FILE_SIZE=10000
+            - PORT=8080
+        image: mbauro/api_gateway
+
+        ports:
+            - "8080:8080"
+        expose:
+            - "8080"
+        links:
+            - application
+        depends_on:
+            - application
+    
+    prometheus:
+        container_name: prometheus
+        image: prom/prometheus
+        ports:
+            - 9090:9090
+        command:
+            #- --config.file=/etc/prometheus/prometheus.yml
+            - --config.file=./prometheus/prometheus.yml
+        depends_on:
+            - api_gateway
+    
+    spout:
+    
+      container_name: spout
+      environment:
+        - URL=http://prometheus:9090
+        - PORT=8082
+      image: spout
+      build:
+        context: ./spout
+        dockerfile: Dockerfile
+      ports:
+        - "8082:8082"
+      expose:
+        - "8082"
+      links:
+        - prometheus
+        - kafka
+      depends_on:
+        - prometheus
+        - kafka
+        
+    zookeeper:
+      image: wurstmeister/zookeeper
+      ports:
+        - "2181:2181"
+    kafka:
+      image: wurstmeister/kafka
+      ports:
+        - "9092:9092"
+      environment:
+        KAFKA_ADVERTISED_HOST_NAME: kafka
+        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+        
+
+        
+    
+ 

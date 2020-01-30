@@ -103,7 +103,7 @@ services:
       environment:
         - URL=http://prometheus:9090
         - PORT=8082
-      image: spout
+      image: mbauro/spout
       build:
         context: ./spout
         dockerfile: Dockerfile

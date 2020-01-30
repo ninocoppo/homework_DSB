@@ -5,7 +5,6 @@ ARG JAR_FILE=target/*.jar
 #Copy the jar file to the container's filesystem
 COPY target/*.jar /FileManagementService.jar
 WORKDIR /data
-#Command to execute at the start of the container. In this case
-#starts the jar file.
+COPY ./homework_DSB/files .
 ENTRYPOINT ["java","-jar","/FileManagementService.jar"]
 

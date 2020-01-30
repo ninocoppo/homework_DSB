@@ -19,7 +19,7 @@ object App {
   def main(args: Array[String]): Unit = {
     // Create context with 30 second batch interval
     val conf = new SparkConf().setAppName("spark-kafka").setMaster("local[2]").set("spark.executor.memory","1g");
-    val ssc = new StreamingContext(conf, Seconds(5))
+    val ssc = new StreamingContext(conf, Seconds(30))
     //Env variable from kubernetes deployment yaml
     val URL = sys.env("URL");
     println("URL :"+URL)

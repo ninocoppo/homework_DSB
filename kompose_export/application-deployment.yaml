@@ -40,6 +40,8 @@ spec:
           value: "8081"
         - name: SECRET_KEY
           value: maurolabruna
+        - name: MY_URL
+          value: 192.168.39.156:31367 
         image: myapp
         imagePullPolicy: Never
         name: myapp

@@ -14,6 +14,10 @@ public class UriConfiguration {
     static String url;
     static long maximum_file_size;
 
+
+
+
+
     public long getMaxFileSize() {
         return maximum_file_size;
     }

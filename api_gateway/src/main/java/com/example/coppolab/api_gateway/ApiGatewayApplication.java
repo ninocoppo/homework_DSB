@@ -43,40 +43,32 @@ public class ApiGatewayApplication {
 
 
                         // Register a user with POST command
-                        .route(p -> p.path("/register/**")
+                        .route(p -> p.path("/fms/register/**")
 
-                                .filters(f -> f.rewritePath("/register", "/user/register")
+                                .filters(f -> f.rewritePath("/fms/register", "/user/register")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
                         // Return a list of files of authenticated user
 
 
 
-                        .route(p -> p.path("/").and().method(HttpMethod.GET)
-                                .filters(f -> f.rewritePath("/", "/minio/files")
+                        .route(p -> p.path("/minio/").and().method(HttpMethod.GET)
+                                .filters(f -> f.rewritePath("/minio", "/minio/files")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
 
 
                         // Return the file that correspond to the id_record
-                        .route(p -> p.path("/**").and().method(HttpMethod.GET)
-                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/showRecord/${segment}")
+                        .route(p -> p.path("/minio/**").and().method(HttpMethod.GET)
+                                .filters(f -> f.rewritePath("/minio/(?<segment>.*)", "/record/showRecord/${segment}")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
-
-                        // Return the file that correspond to the id_record
-                        .route(p -> p.path("/**").and().method(HttpMethod.GET)
-                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/showRecord/${segment}")
-                                        .filter(httpRequestInfo))
-                                .uri(uriConfiguration.getUrl()))
-
-
-                        // Insert new record
-                        .route(p -> p.path("/").and().method(HttpMethod.POST)
+                         // Insert new record
+                        .route(p -> p.path("/fms/").and().method(HttpMethod.POST)
                                 .and().readBody(String.class, requestBody -> {return true;})
-                                .filters(f -> f.rewritePath("/", "/record/put")
+                                .filters(f -> f.rewritePath("/fms", "/record/put")
 
 
                                         .filter(httpRequestInfo)
@@ -88,15 +80,15 @@ public class ApiGatewayApplication {
 
                         // Upload file in minio
 
-                        .route(p -> p.path("/**").and().method(HttpMethod.POST)
-                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/record/check/${segment}")
+                        .route(p -> p.path("/minio/**").and().method(HttpMethod.POST)
+                                .filters(f -> f.rewritePath("/minio/(?<segment>.*)", "/record/check/${segment}")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
 
                         // Delete a file
 
-                        .route(p -> p.path("/**").and().method(HttpMethod.DELETE)
-                                .filters(f -> f.rewritePath("/(?<segment>.*)", "/minio/deleteByUserRole/${segment}")
+                        .route(p -> p.path("/minio/**").and().method(HttpMethod.DELETE)
+                                .filters(f -> f.rewritePath("/minio/(?<segment>.*)", "/minio/deleteByUserRole/${segment}")
                                         .filter(httpRequestInfo))
                                 .uri(uriConfiguration.getUrl()))
                         .build();

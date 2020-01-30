@@ -37,6 +37,8 @@ public class MinioService {
 
     private String url;
 
+    private String my_url;
+
 
     private List<MinioClient> minioClient = new ArrayList<>();
 
@@ -64,7 +66,7 @@ public class MinioService {
         this.accesskey = minioConfig.getAccess_key();
         this.secretkey = minioConfig.getSecret_key();
         this.url = minioConfig.getUrl();
-
+        this.my_url = minioConfig.getMy_url();
         int length= ipAddress.length;
 
         for(int i = 0; i < ipAddress.length; i++){
@@ -129,7 +131,9 @@ public class MinioService {
         try {
 
 
-            return this.minioClient.get(0).presignedGetObject(bucketName, objectName);
+            MinioClient mc = new MinioClient("http://"+my_url,9000,accesskey,secretkey);
+            return mc.presignedGetObject(bucketName,objectName);
+            //return this.minioClient.get(0).presignedGetObject(bucketName, objectName);
 
 
 

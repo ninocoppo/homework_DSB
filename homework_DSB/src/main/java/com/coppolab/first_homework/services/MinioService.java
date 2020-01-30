@@ -37,8 +37,11 @@ public class MinioService {
 
     private String url;
 
+    private String my_url;
+
 
     private List<MinioClient> minioClient = new ArrayList<>();
+
 
 
     @Autowired
@@ -52,15 +55,18 @@ public class MinioService {
 
     MinioDiscoveryService minioDiscoveryService = new MinioDiscoveryService();
 
+
     InetAddress[] ipAddress = this.minioDiscoveryService.resolve("minio-headless-service");
+
 
     @Autowired
     public MinioService(MinioConfig minioConfig) throws InvalidPortException, InvalidEndpointException {
 
+
         this.accesskey = minioConfig.getAccess_key();
         this.secretkey = minioConfig.getSecret_key();
         this.url = minioConfig.getUrl();
-
+        this.my_url = minioConfig.getMy_url();
         int length= ipAddress.length;
 
         for(int i = 0; i < ipAddress.length; i++){
@@ -68,14 +74,17 @@ public class MinioService {
             System.out.println("Created connection with minio service with IP: "+ipAddress[i].getHostAddress());
         }
 
-
     }
 
     public void createBucket(User user) {
         try {
 
+
+
             for(int i=0; i<minioClient.size();i++) {
+
               this.minioClient.get(i).makeBucket(user.getNickname());
+
             }
         } catch (InvalidBucketNameException | RegionConflictException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException e) {
 
@@ -93,8 +102,10 @@ public class MinioService {
 
             for(int i = 0; i < minioClient.size(); i++) {
 
+
                 //filename = path of the container storage + filename
                 this.minioClient.get(i).putObject(bucketName, objectName, fileName);
+
             }
 
             record.setStatus("Available");
@@ -119,12 +130,10 @@ public class MinioService {
 
         try {
 
-            return this.minioClient.get(0).presignedGetObject(bucketName, objectName);
-            /*System.out.println("Original URL: "+originalUrl);
-            System.out.println("Modified URL: "+this.urlMinioClient.presignedGetObject(bucketName,objectName));
-            return this.urlMinioClient.presignedGetObject(bucketName,objectName);
-            */
 
+            MinioClient mc = new MinioClient("http://"+my_url,9000,accesskey,secretkey);
+            return mc.presignedGetObject(bucketName,objectName);
+            //return this.minioClient.get(0).presignedGetObject(bucketName, objectName);
 
 
 
@@ -174,14 +183,14 @@ public class MinioService {
 
         try {
 
-            for(int i = 0; i < minioClient.size(); i++) {
+
                 Iterable<Result<Item>> infos = this.minioClient.get(0).listObjects(nickname);
                 //Fill user's file list
                 for (Result<Item> info : infos) {
                     files.add(info.get().objectName());
                 }
 
-            }
+
 
             return new Gson().toJson(files);
 
@@ -241,7 +250,6 @@ public class MinioService {
     }
 
     //DELETE IN ADMIN MODE
-
     public ResponseEntity<String> deleteAsAdmin(int id){
         Optional<Record> r = recordRepository.findById(id);
         Record record = r.get();

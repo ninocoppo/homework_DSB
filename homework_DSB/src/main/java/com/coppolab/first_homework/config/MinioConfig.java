@@ -13,13 +13,20 @@ public class MinioConfig {
     private String secret_key;
     @Value("${minio.url}")
     private String url;
-
+    @Value("${my.url}")
+    private String my_url;
 
 
     public String getAccess_key() {
         System.out.println(access_key);
         return access_key;
     }
+
+    public String getMy_url() {
+        return my_url;
+    }
+
+
 
     public String getSecret_key() {
         return secret_key;

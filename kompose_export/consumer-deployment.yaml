@@ -19,11 +19,12 @@ spec:
       - env:
         - name: URL
           value: "INSIDE://:9092,OUTSIDE://kafka-service:30322"
+
         - name: PORT
           value: "8084"
         
-        image: consumer
-        imagePullPolicy: Never
+        image: mbauro/kafkaconsumer
+        #imagePullPolicy: Never
         name: consumer
         workingDir: /consumer
         

@@ -23,8 +23,8 @@ spec:
           value: "8082"
         - name: KAFKA_BROKER_URL
           value: "INSIDE://:9092,OUTSIDE://kafka-service:30322"
-        image: spout
-        imagePullPolicy: Never
+        image: mbauro/spout
+        #imagePullPolicy: Never
         name: spout
         workingDir: /spout
         

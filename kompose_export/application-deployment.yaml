@@ -1,28 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.20.0 (HEAD)
-  creationTimestamp: null
   labels:
-    io.kompose.service: myapp
+    app: myapp
   name: myapp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: myapp
+      app: myapp
   strategy:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.20.0 (HEAD)
-      creationTimestamp: null
       labels:
-        io.kompose.service: myapp
+        app: myapp
     spec:
       containers:
       - env:
@@ -31,7 +23,7 @@ spec:
         - name: DB_PASSWORD
           value: mauro
         - name: DB_URL
-          value: jdbc:mysql://mysql:3306/homework_db
+          value: jdbc:mysql://mysql-headless-service:3306/homework_db
         - name: DB_USERNAME
           value: mauro
         - name: MINIO_URL
@@ -40,8 +32,10 @@ spec:
           value: "8081"
         - name: SECRET_KEY
           value: maurolabruna
-        image: myapp
-        imagePullPolicy: Never
+        - name: MY_URL
+          value: 192.168.39.156:31367 
+        image: mbauro/filemanagementservice
+        imagePullPolicy: IfNotPresent
         name: myapp
 
         workingDir: /myapp/storage/homework_DSB/files/

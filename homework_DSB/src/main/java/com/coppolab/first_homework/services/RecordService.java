@@ -96,6 +96,7 @@ public class RecordService {
                 record1.setStatus("Uploading");
                 recordRepository.save(record1);
                 minioService.uploadFile(nickname, record.getFilename(), record.getFilename(), id);
+                System.out.println("ECCOMIIIIIIIIIIIIIIIII");
                 this.updateRecord(id, record.getFilename());
 
                 return new ResponseEntity(record, HttpStatus.ACCEPTED);
@@ -116,6 +117,7 @@ public class RecordService {
 
         record.setBucketName(fileInfo.get((String)"Bucket Name"));
         record.setObjectName(fileInfo.get((String)"Object Name"));
+
         recordRepository.save(record);
         return new ResponseEntity<>(record,HttpStatus.ACCEPTED);
     }

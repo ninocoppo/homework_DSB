@@ -33,13 +33,13 @@ spec:
         - name: PORT
           value: "8080"
         - name: RESPONSE_TIMEOUT
-
           value: "5000"
-
         - name: URL
           value: http://myapp:8081
-        image: api_gateway
-        imagePullPolicy: Never
+        - name: MY_URL
+          value: http://192.168.39.156:32176
+        image: mbauro/api_gateway
+        #imagePullPolicy: Never
         name: api-gateway
 
         workingDir: /api_gateway/storage/api_gateway

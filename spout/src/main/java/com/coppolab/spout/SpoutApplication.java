@@ -51,7 +51,12 @@ public class SpoutApplication {
 
 
     private void start(){
-        this.kafkaProducerMetrics.sendMessage();
+
+        try {
+            this.kafkaProducerMetrics.sendMessage();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 /*
     private void createTopic(){

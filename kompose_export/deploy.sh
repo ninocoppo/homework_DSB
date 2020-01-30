@@ -15,7 +15,7 @@ kubectl apply -f prometheus-config.yaml
 echo "Exposing services"
 kubectl apply -f minio-headless-service.yaml
 kubectl apply -f minio-service.yaml 
-kubectl apply -f mysql-service.yaml
+kubectl apply -f mysql-headless-service.yaml
 kubectl apply -f prometheus-service.yaml
 kubectl apply -f kafka-service.yaml
 kubectl apply -f zookeeper-service.yaml
